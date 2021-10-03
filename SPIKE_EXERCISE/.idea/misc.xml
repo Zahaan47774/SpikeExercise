@@ -3,11 +3,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+<<<<<<< HEAD
         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_main.xml" value="0.371875" />
       </map>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+=======
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.321025641025641" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.321025641025641" />
+        <entry key="app/src/main/res/drawable/madison_image_background.xml" value="0.321025641025641" />
+        <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.134765625" />
+        <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.11381025248661056" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.40829404487409254" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+>>>>>>> 559c5a616921b8f29a703d6bb835b5824ab9d1a9
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
