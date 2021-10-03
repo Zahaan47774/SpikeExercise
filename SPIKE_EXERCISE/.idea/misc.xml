@@ -15,7 +15,7 @@
         <entry key="app/src/main/res/drawable/madison_image_background.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.134765625" />
         <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.11381025248661056" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.40829404487409254" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
       </map>
     </option>
   </component>
