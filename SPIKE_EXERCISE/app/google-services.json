@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1045456571553",
+    "project_id": "spike-exercise-6e654",
+    "storage_bucket": "spike-exercise-6e654.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045456571553:android:a0393535cb8068524f74e0",
+        "android_client_info": {
+          "package_name": "com.example.spike_exercise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045456571553-2blicgd1jakl4dcqv6haehehekhf333g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBerLbDfXhK-rwYJe1JF1h7_WVhbMsAr5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045456571553-2blicgd1jakl4dcqv6haehehekhf333g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
