@@ -1,16 +1,16 @@
-package com.example.spike_exercise.ui.notifications;
+package com.example.spike_exercise.ui.maintenance;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class NotificationsViewModel extends ViewModel {
+public class MaintenanceViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public NotificationsViewModel() {
+    public MaintenanceViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("This is the maintenance requests fragment.");
     }
 
     public LiveData<String> getText() {

@@ -1,4 +1,4 @@
-package com.example.spike_exercise.ui.notifications;
+package com.example.spike_exercise.ui.payment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,25 +12,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.spike_exercise.R;
-import com.example.spike_exercise.databinding.FragmentNotificationsBinding;
+import com.example.spike_exercise.databinding.FragmentPaymentBinding;
 
-public class NotificationsFragment extends Fragment {
+public class PaymentFragment extends Fragment {
 
-    private NotificationsViewModel       notificationsViewModel;
-    private FragmentNotificationsBinding binding;
+    private PaymentViewModel       paymentViewModel;
+    private FragmentPaymentBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState
     ) {
-        notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+        paymentViewModel =
+                new ViewModelProvider(this).get(PaymentViewModel.class);
 
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentPaymentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        final TextView textView = binding.textDashboard;
+        paymentViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

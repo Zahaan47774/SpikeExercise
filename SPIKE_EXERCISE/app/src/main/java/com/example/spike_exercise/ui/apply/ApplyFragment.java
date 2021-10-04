@@ -1,4 +1,4 @@
-package com.example.spike_exercise.ui.dashboard;
+package com.example.spike_exercise.ui.apply;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,25 +12,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.spike_exercise.R;
-import com.example.spike_exercise.databinding.FragmentDashboardBinding;
+import com.example.spike_exercise.databinding.FragmentApplyBinding;
 
-public class DashboardFragment extends Fragment {
+public class ApplyFragment extends Fragment {
 
-    private DashboardViewModel       dashboardViewModel;
-    private FragmentDashboardBinding binding;
+    private ApplyViewModel       applyViewModel;
+    private FragmentApplyBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState
     ) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        applyViewModel =
+                new ViewModelProvider(this).get(ApplyViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentApplyBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        final TextView textView = binding.textNotifications;
+        applyViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
