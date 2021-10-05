@@ -58,7 +58,7 @@ public class MaintenanceFragment extends Fragment implements OnCompleteListener<
         binding = null;
     }
     public void save(View v){
-        Request request = new Request(ed1.getText().toString(),userID,ed3.getText().toString());
+        Request request = new Request(userID,ed1.getText().toString(),ed3.getText().toString());
         Task<DocumentReference> signupTask = db.collection("maintananence").add(request);
         signupTask.addOnCompleteListener(MaintenanceFragment.this);
     }
@@ -78,15 +78,3 @@ public class MaintenanceFragment extends Fragment implements OnCompleteListener<
         }
     }
 }
-
-//  loginButton.setOnClickListener(new View.OnClickListener() {
-//@Override
-//public void onClick(View view) {
-//        if(validateTextInputs()) {
-//        loginViewModel.setBusyStatus(true);
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        Task<AuthResult> signupTask = firebaseAuth.signInWithEmailAndPassword(emailInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
-//        signupTask.addOnCompleteListener(LoginFragment.this);
-//        }
-//        }
-//        });
