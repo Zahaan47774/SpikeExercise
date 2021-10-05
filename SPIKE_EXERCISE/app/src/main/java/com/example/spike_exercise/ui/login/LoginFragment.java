@@ -10,6 +10,7 @@ import androidx.navigation.Navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -27,11 +28,22 @@ import com.example.spike_exercise.MainActivity;
 import com.example.spike_exercise.databinding.FragmentLoginBinding;
 
 import com.example.spike_exercise.R;
+import com.example.spike_exercise.ui.signup.SignupFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements OnCompleteListener<AuthResult> {
 
     private LoginViewModel       loginViewModel;
     private FragmentLoginBinding binding;
+
+    private Button loginButton;
+    private TextInputLayout emailInput, passwordInput;
+    private CircularProgressIndicator loginProgressIndicator;
 
     @Nullable
     @Override
@@ -51,122 +63,89 @@ public class LoginFragment extends Fragment {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
-        //final Button loginButton = binding.login;
-        final ProgressBar loadingProgressBar = binding.loading;
+        final Button signupButton = binding.loginSignupButton;
+        loginButton = binding.loginButton;
+        loginProgressIndicator = binding.loginProgressIndicator;
 
-        final Button newUserButton = binding.button2;
-        final Button skipButton = binding.skipLoginButton;
+        emailInput = binding.loginEmailAddressInput;
+        passwordInput = binding.loginPasswordInput;
 
-        newUserButton.setOnClickListener(new View.OnClickListener() {
+        signupButton.setOnClickListener(this::navigateToSignupFragment);
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_navigate_to_signup);
-            }
-        });
-
-        skipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                //loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                if(validateTextInputs()) {
+                    loginViewModel.setBusyStatus(true);
+                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                    Task<AuthResult> signupTask = firebaseAuth.signInWithEmailAndPassword(emailInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
+                    signupTask.addOnCompleteListener(LoginFragment.this);
                 }
             }
         });
 
-        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), new Observer<LoginResult>() {
+        loginViewModel.observeBusyStatus(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
+            public void onChanged(Boolean busy) {
+                if(busy) {
+                    loginButton.setText("");
+                    loginButton.setEnabled(false);
+                    loginProgressIndicator.setVisibility(View.VISIBLE);
+                } else {
+                    loginButton.setText("LOG IN");
+                    loginButton.setEnabled(true);
+                    loginProgressIndicator.setVisibility(View.GONE);
                 }
             }
         });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
-                return false;
-            }
-        });
-
-        /*loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        });*/
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+    private boolean validateTextInputs() {
+        if(emailInput == null || passwordInput == null) return false;
+        boolean isEmailValid = loginViewModel.validateRequiredField(emailInput.getEditText().getText().toString());
+        boolean isPasswordValid = loginViewModel.validateRequiredField(passwordInput.getEditText().getText().toString());
+
+        if(!isEmailValid) {
+            emailInput.setError("Required");
+        } else {
+            emailInput.setErrorEnabled(false);
         }
+        if(!isPasswordValid) {
+            passwordInput.setError("Required");
+        } else {
+            passwordInput.setErrorEnabled(false);
+        }
+
+        return isEmailValid && isPasswordValid;
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        if (getContext() != null && getContext().getApplicationContext() != null) {
-            Toast.makeText(
-                    getContext().getApplicationContext(),
-                    errorString,
-                    Toast.LENGTH_LONG).show();
-        }
+    private void navigateToSignupFragment(View view) {
+        Navigation.findNavController(view).navigate(R.id.action_navigate_to_signup);
+    }
+
+    private void navigateToMainActivity() {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onComplete(@NonNull Task<AuthResult> task) {
+        loginViewModel.setBusyStatus(false);
+        if(task.isSuccessful()) {
+            navigateToMainActivity();
+        } else {
+            String errorMessage = task.getException().getMessage().toLowerCase();
+            if(errorMessage.contains("email") || errorMessage.contains("password") || errorMessage.contains("no user")) {
+                passwordInput.setError("Oops! The email address or password you entered was incorrect.");
+            } else {
+                passwordInput.setError(task.getException().getMessage());
+            }
+        }
     }
 }
