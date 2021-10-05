@@ -11,6 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.spike_exercise.databinding.ActivityAccountBinding;
 import com.example.spike_exercise.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class AccountActivity extends AppCompatActivity {
 
