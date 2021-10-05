@@ -7,18 +7,17 @@
     android:animateLayoutChanges="true"
     tools:context=".ui.signup.SignupFragment">
 
-    <TextView
-        android:id="@+id/signup_create_account_title"
+    <ImageView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Sign In"
-        android:textAlignment="center"
-        android:textSize="32sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintWidth_percent="0.8"
+        android:src="@drawable/madrentals_logo_full"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_email_address_input"
@@ -66,6 +65,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Log In"
+        android:elevation="6dp"
         app:layout_constraintBottom_toTopOf="@id/login_no_account_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_min="56dp"
