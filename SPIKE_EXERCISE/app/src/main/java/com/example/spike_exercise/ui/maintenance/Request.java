@@ -1,9 +1,9 @@
 package com.example.spike_exercise.ui.maintenance;
 
 public class Request {
-    public int userID,tenantID;
+    public String userID,tenantID;
     public String request;
-    public Request(int userID,int tenantID,String request){
+    public Request(String userID,String tenantID,String request){
         this.userID = userID;
         this.tenantID = tenantID;
         this.request = request;
@@ -11,7 +11,7 @@ public class Request {
     public Request(){
 
     }
-    public int getTenantID() {
+    public String getTenantID() {
         return tenantID;
     }
 
@@ -23,15 +23,15 @@ public class Request {
         this.request = request;
     }
 
-    public void setTenantID(int tenantID) {
+    public void setTenantID(String tenantID) {
         this.tenantID = tenantID;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 }

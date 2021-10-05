@@ -10,24 +10,11 @@
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="262dp"
         android:layout_height="116dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="144dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Maintanance request details"
         app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextNumber"
-        android:layout_width="262dp"
-        android:layout_height="116dp"
-        android:layout_marginBottom="128dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="32"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
@@ -39,11 +26,10 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="324"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumber"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.452" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
