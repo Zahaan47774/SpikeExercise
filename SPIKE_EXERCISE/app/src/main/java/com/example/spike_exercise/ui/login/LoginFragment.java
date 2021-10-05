@@ -139,6 +139,13 @@ public class LoginFragment extends Fragment implements OnCompleteListener<AuthRe
         loginViewModel.setBusyStatus(false);
         if(task.isSuccessful()) {
             navigateToMainActivity();
+        } else {
+            String errorMessage = task.getException().getMessage().toLowerCase();
+            if(errorMessage.contains("email") || errorMessage.contains("password") || errorMessage.contains("no user")) {
+                passwordInput.setError("Oops! The email address or password you entered was incorrect.");
+            } else {
+                passwordInput.setError(task.getException().getMessage());
+            }
         }
     }
 }
