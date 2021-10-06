@@ -11,7 +11,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="290dp"
         android:layout_height="121dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="4dp"
         android:ems="10"
         android:fadingEdge="horizontal|vertical|none"
         android:hint="Please input your Maintenance request "
@@ -27,7 +27,7 @@
         android:id="@+id/button"
         android:layout_width="212dp"
         android:layout_height="69dp"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="96dp"
         android:text="Submit Request"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.426"
+        app:layout_constraintVertical_bias="0.227"
         app:srcCompat="@drawable/madrentals_logo_only" />
 
     <TextView
@@ -95,7 +95,7 @@
         android:id="@+id/textView3"
         android:layout_width="136dp"
         android:layout_height="26dp"
-        android:text="Pick Landlord"
+        android:text="Request Message"
         android:textColor="#EF0909"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName2"
