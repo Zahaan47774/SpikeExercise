@@ -1,0 +1,603 @@
+Index: app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModelFactory.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.spike_exercise.ui.login;\r\n\r\nimport androidx.lifecycle.ViewModel;\r\nimport androidx.lifecycle.ViewModelProvider;\r\nimport androidx.annotation.NonNull;\r\n\r\nimport com.example.spike_exercise.data.LoginDataSource;\r\nimport com.example.spike_exercise.data.LoginRepository;\r\n\r\n/**\r\n * ViewModel provider factory to instantiate LoginViewModel.\r\n * Required given LoginViewModel has a non-empty constructor\r\n */\r\npublic class LoginViewModelFactory implements ViewModelProvider.Factory {\r\n\r\n    @NonNull\r\n    @Override\r\n    @SuppressWarnings(\"unchecked\")\r\n    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {\r\n        if (modelClass.isAssignableFrom(LoginViewModel.class)) {\r\n            return (T) new LoginViewModel(LoginRepository.getInstance());\r\n        } else {\r\n            throw new IllegalArgumentException(\"Unknown ViewModel class\");\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModelFactory.java b/app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModelFactory.java
+--- a/app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModelFactory.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModelFactory.java	(date 1633500708143)
+@@ -4,7 +4,6 @@
+ import androidx.lifecycle.ViewModelProvider;
+ import androidx.annotation.NonNull;
+ 
+-import com.example.spike_exercise.data.LoginDataSource;
+ import com.example.spike_exercise.data.LoginRepository;
+ 
+ /**
+Index: app/src/main/java/com/example/spike_exercise/ui/signup/SignupViewModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.spike_exercise.ui.signup;\r\n\r\nimport android.os.Handler;\r\nimport android.util.Patterns;\r\nimport android.view.View;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.lifecycle.LifecycleOwner;\r\nimport androidx.lifecycle.MutableLiveData;\r\nimport androidx.lifecycle.Observer;\r\nimport androidx.lifecycle.ViewModel;\r\n\r\nimport com.example.spike_exercise.data.AccountType;\r\nimport com.google.android.gms.tasks.Continuation;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.DocumentReference;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class SignupViewModel extends ViewModel implements OnCompleteListener<Void> {\r\n\r\n    private FirebaseFirestore firestore;\r\n\r\n    private final MutableLiveData<AccountType> selectedAccountType;\r\n    private final MutableLiveData<Boolean> busyStatus;\r\n    private final Map<String, Object> userData;\r\n\r\n    public SignupViewModel() {\r\n        this.firestore = FirebaseFirestore.getInstance();\r\n        this.selectedAccountType = new MutableLiveData<>(AccountType.TENANT);\r\n        this.busyStatus = new MutableLiveData<>(false);\r\n        this.userData = new HashMap<>();\r\n    }\r\n\r\n    public void setSelectedAccountType(AccountType accountType) {\r\n        selectedAccountType.setValue(accountType);\r\n    }\r\n\r\n    public AccountType getSelectedAccountType() {\r\n        return selectedAccountType.getValue();\r\n    }\r\n\r\n    public void observeSelectedAccountType(LifecycleOwner lifecycleOwner, Observer<? super AccountType> observer) {\r\n        selectedAccountType.observe(lifecycleOwner, observer);\r\n    }\r\n\r\n    public void setBusyStatus(boolean isBusy) {\r\n        busyStatus.setValue(isBusy);\r\n    }\r\n\r\n    public void observeBusyStatus(LifecycleOwner lifecycleOwner, Observer<? super Boolean> observer) {\r\n        busyStatus.observe(lifecycleOwner, observer);\r\n    }\r\n\r\n    public boolean isBusy() {\r\n        return busyStatus.getValue();\r\n    }\r\n\r\n    public boolean validateRequiredField(String fieldText) {\r\n        return fieldText != null && !fieldText.isEmpty();\r\n    }\r\n\r\n    public boolean validateEmailField(String emailText) {\r\n        return emailText != null && Patterns.EMAIL_ADDRESS.matcher(emailText).matches();\r\n    }\r\n\r\n    public boolean validatePasswordField(String passwordText) {\r\n        return passwordText != null && passwordText.length() >= 8;\r\n    }\r\n\r\n    public void createUser(String firstName, String lastName, String companyName, String emailAddress, String password, OnCompleteListener<Void> onCompleteListener) {\r\n        busyStatus.setValue(true);\r\n        userData.put(\"accountType\", selectedAccountType.getValue().ordinal());\r\n        userData.put(\"firstName\", firstName);\r\n        userData.put(\"lastName\", lastName);\r\n        userData.put(\"companyName\", companyName);\r\n        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();\r\n        Task<Void> signupTask = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password)\r\n                .continueWithTask(new Continuation<AuthResult, Task<Void>>() {\r\n                    @Override\r\n                    public Task<Void> then(@NonNull Task<AuthResult> task) throws Exception {\r\n                        if(task.isSuccessful()) {\r\n                            FirebaseUser newUser = task.getResult().getUser();\r\n                            DocumentReference newUserDataDocument = firestore.collection(\"users\").document(newUser.getUid());\r\n                            return newUserDataDocument.set(userData);\r\n                        }\r\n                        return null;\r\n                    }\r\n                });\r\n        signupTask.addOnCompleteListener(this);\r\n        signupTask.addOnCompleteListener(onCompleteListener);\r\n    }\r\n\r\n    @Override\r\n    public void onComplete(@NonNull Task<Void> task) {\r\n        busyStatus.setValue(false);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/signup/SignupViewModel.java b/app/src/main/java/com/example/spike_exercise/ui/signup/SignupViewModel.java
+--- a/app/src/main/java/com/example/spike_exercise/ui/signup/SignupViewModel.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/app/src/main/java/com/example/spike_exercise/ui/signup/SignupViewModel.java	(date 1633500286155)
+@@ -18,6 +18,7 @@
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.auth.FirebaseUser;
+ import com.google.firebase.firestore.DocumentReference;
++import com.google.firebase.firestore.DocumentSnapshot;
+ import com.google.firebase.firestore.FirebaseFirestore;
+ 
+ import java.util.HashMap;
+@@ -81,18 +82,15 @@
+         userData.put("lastName", lastName);
+         userData.put("companyName", companyName);
+         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+-        Task<Void> signupTask = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password)
+-                .continueWithTask(new Continuation<AuthResult, Task<Void>>() {
+-                    @Override
+-                    public Task<Void> then(@NonNull Task<AuthResult> task) throws Exception {
+-                        if(task.isSuccessful()) {
+-                            FirebaseUser newUser = task.getResult().getUser();
+-                            DocumentReference newUserDataDocument = firestore.collection("users").document(newUser.getUid());
+-                            return newUserDataDocument.set(userData);
+-                        }
+-                        return null;
+-                    }
+-                });
++        Task<AuthResult> authTask = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password);
++        Task<Void> signupTask = authTask.continueWithTask(task -> {
++            if(task.isSuccessful() && task.getResult() != null && task.getResult().getUser() != null) {
++                FirebaseUser newUser = task.getResult().getUser();
++                DocumentReference newUserDataDocument = firestore.collection("users").document(newUser.getUid());
++                return newUserDataDocument.set(userData);
++            }
++            return null;
++        });
+         signupTask.addOnCompleteListener(this);
+         signupTask.addOnCompleteListener(onCompleteListener);
+     }
+Index: app/src/main/java/com/example/spike_exercise/ui/signup/SignupFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.spike_exercise.ui.signup;\r\n\r\nimport androidx.lifecycle.Observer;\r\nimport androidx.lifecycle.ViewModelProvider;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.navigation.Navigation;\r\n\r\nimport android.os.Handler;\r\nimport android.text.Editable;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Button;\r\nimport android.widget.TextView;\r\n\r\nimport com.example.spike_exercise.R;\r\nimport com.example.spike_exercise.data.AccountType;\r\nimport com.example.spike_exercise.databinding.FragmentMaintenanceBinding;\r\nimport com.example.spike_exercise.databinding.FragmentSignupBinding;\r\nimport com.example.spike_exercise.ui.payment.PaymentViewModel;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.android.material.button.MaterialButtonToggleGroup;\r\nimport com.google.android.material.progressindicator.CircularProgressIndicator;\r\nimport com.google.android.material.textfield.TextInputLayout;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class SignupFragment extends Fragment implements OnCompleteListener<Void> {\r\n\r\n    private SignupViewModel mViewModel;\r\n    private FragmentSignupBinding binding;\r\n\r\n    private static final String FIELD_FIRST_NAME = \"field_first_name\";\r\n    private static final String FIELD_LAST_NAME = \"field_last_name\";\r\n    private static final String FIELD_COMPANY_NAME = \"field_company_name\";\r\n    private static final String FIELD_EMAIL = \"field_email\";\r\n    private static final String FIELD_PASSWORD = \"field_password\";\r\n\r\n    private TextInputLayout firstNameInput, lastNameInput, companyNameInput, emailInput, passwordInput;\r\n    private TextView passwordReqText;\r\n    private Button signupButton, signupSuccessButton;\r\n    private CircularProgressIndicator signupProgressIndicator;\r\n\r\n    public static SignupFragment newInstance() {\r\n        return new SignupFragment();\r\n    }\r\n\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\r\n\r\n        mViewModel = new ViewModelProvider(this).get(SignupViewModel.class);\r\n\r\n        binding = FragmentSignupBinding.inflate(inflater, container, false);\r\n        View root = binding.getRoot();\r\n\r\n        firstNameInput   = binding.signupFirstNameInput;\r\n        lastNameInput    = binding.signupLastNameInput;\r\n        companyNameInput = binding.signupCompanyNameInput;\r\n        emailInput       = binding.signupEmailAddressInput;\r\n        passwordInput    = binding.signupPasswordInput;\r\n\r\n        passwordReqText = binding.signupPasswordReqText;\r\n\r\n        signupSuccessButton = binding.signupSuccessButton;\r\n        signupProgressIndicator = binding.signupProgressIndicator;\r\n\r\n        if(savedInstanceState != null) {\r\n            firstNameInput.getEditText().setText(savedInstanceState.getString(FIELD_FIRST_NAME));\r\n            lastNameInput.getEditText().setText(savedInstanceState.getString(FIELD_LAST_NAME));\r\n            companyNameInput.getEditText().setText(savedInstanceState.getString(FIELD_COMPANY_NAME));\r\n            emailInput.getEditText().setText(savedInstanceState.getString(FIELD_EMAIL));\r\n            //passwordInput.getEditText().setText(savedInstanceState.getString(FIELD_PASSWORD));\r\n        }\r\n\r\n\r\n        // Set up dynamic UI that changes when the toggle button is switched between the \"Tenant\" and \"Landlord\" items\r\n        MaterialButtonToggleGroup accountTypeButtonGroup = binding.signupAccountTypeButtonGroup;\r\n\r\n        // Set initial selected item\r\n        mViewModel.setSelectedAccountType(accountTypeButtonGroup.getCheckedButtonId() == R.id.signup_tenant_button ? AccountType.TENANT : AccountType.LANDLORD);\r\n\r\n        // Observe all future changes and show/hide UI elements accordingly\r\n        mViewModel.observeSelectedAccountType(getViewLifecycleOwner(), accountType -> companyNameInput.setVisibility(accountType == AccountType.LANDLORD ? View.VISIBLE : View.GONE));\r\n\r\n        // Sync data in view model any time the user selects a different item in the UI\r\n        accountTypeButtonGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {\r\n            if(isChecked) mViewModel.setSelectedAccountType(checkedId == R.id.signup_tenant_button ? AccountType.TENANT : AccountType.LANDLORD);\r\n        });\r\n\r\n\r\n        // Set up navigation action back to login screen\r\n        Button loginButton = binding.signupLoginButton;\r\n        loginButton.setOnClickListener(this::navigateToLoginFragment);\r\n\r\n        signupButton = binding.signupButton;;\r\n        signupButton.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                if(validateTextInputs()) {\r\n                    mViewModel.createUser(\r\n                            firstNameInput.getEditText().getText().toString(),\r\n                            lastNameInput.getEditText().getText().toString(),\r\n                            companyNameInput.getEditText().getText().toString(),\r\n                            emailInput.getEditText().getText().toString(),\r\n                            passwordInput.getEditText().getText().toString(),\r\n                            SignupFragment.this\r\n                    );\r\n\r\n                }\r\n            }\r\n        });\r\n\r\n        mViewModel.observeBusyStatus(getViewLifecycleOwner(), new Observer<Boolean>() {\r\n            @Override\r\n            public void onChanged(Boolean busy) {\r\n                if(busy) {\r\n                    signupButton.setText(\"\");\r\n                    signupButton.setEnabled(false);\r\n                    signupProgressIndicator.setVisibility(View.VISIBLE);\r\n                } else {\r\n                    signupButton.setText(\"SIGN UP\");\r\n                    signupButton.setEnabled(true);\r\n                    signupProgressIndicator.setVisibility(View.GONE);\r\n                }\r\n            }\r\n        });\r\n\r\n        return root;\r\n    }\r\n\r\n    private boolean validateTextInputs() {\r\n        if(emailInput == null || passwordInput == null) return false;\r\n        boolean isEmailValid = mViewModel.validateEmailField(emailInput.getEditText().getText().toString());\r\n        boolean isPasswordValid = mViewModel.validatePasswordField(passwordInput.getEditText().getText().toString());\r\n        boolean isFirstNameValid = mViewModel.validateRequiredField(firstNameInput.getEditText().getText().toString());\r\n        boolean isLastNameValid = mViewModel.validateRequiredField(lastNameInput.getEditText().getText().toString());\r\n\r\n        if(!isEmailValid) {\r\n            emailInput.setError(\"Invalid email address\");\r\n        } else {\r\n            emailInput.setErrorEnabled(false);\r\n        }\r\n        if(!isPasswordValid) {\r\n            passwordInput.setError(\"Password must be at least 8 characters long\");\r\n            passwordReqText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));\r\n        } else {\r\n            passwordInput.setErrorEnabled(false);\r\n            passwordReqText.setTextColor(getResources().getColor(android.R.color.black));\r\n        }\r\n        if(!isFirstNameValid) {\r\n            firstNameInput.setError(\"Required\");\r\n        } else {\r\n            firstNameInput.setErrorEnabled(false);\r\n        }\r\n        if(!isLastNameValid) {\r\n            lastNameInput.setError(\"Required\");\r\n        } else {\r\n            lastNameInput.setErrorEnabled(false);\r\n        }\r\n\r\n        return isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid;\r\n    }\r\n\r\n    private void navigateToLoginFragment(View view) {\r\n        Navigation.findNavController(view).navigate(R.id.action_navigate_to_login);\r\n    }\r\n\r\n    @Override\r\n    public void onSaveInstanceState(@NonNull Bundle outState) {\r\n        super.onSaveInstanceState(outState);\r\n        outState.putString(FIELD_FIRST_NAME, firstNameInput.getEditText().getText().toString());\r\n        outState.putString(FIELD_LAST_NAME, lastNameInput.getEditText().getText().toString());\r\n        outState.putString(FIELD_COMPANY_NAME, companyNameInput.getEditText().getText().toString());\r\n        outState.putString(FIELD_EMAIL, emailInput.getEditText().getText().toString());\r\n        //outState.putString(FIELD_PASSWORD, passwordInput.getEditText().getText().toString());\r\n    }\r\n\r\n    @Override\r\n    public void onActivityCreated(@Nullable Bundle savedInstanceState) {\r\n        super.onActivityCreated(savedInstanceState);\r\n        mViewModel = new ViewModelProvider(this).get(SignupViewModel.class);\r\n    }\r\n\r\n    @Override\r\n    public void onComplete(@NonNull Task<Void> task) {\r\n        if(task.isSuccessful()) {\r\n            signupButton.setVisibility(View.INVISIBLE);\r\n            signupSuccessButton.setVisibility(View.VISIBLE);\r\n            final Handler handler = new Handler();\r\n            handler.postDelayed(new Runnable() {\r\n                @Override\r\n                public void run() {\r\n                    navigateToLoginFragment(signupButton);\r\n                }\r\n            }, 500);\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/signup/SignupFragment.java b/app/src/main/java/com/example/spike_exercise/ui/signup/SignupFragment.java
+--- a/app/src/main/java/com/example/spike_exercise/ui/signup/SignupFragment.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/app/src/main/java/com/example/spike_exercise/ui/signup/SignupFragment.java	(date 1633500708128)
+@@ -41,11 +41,11 @@
+     private SignupViewModel mViewModel;
+     private FragmentSignupBinding binding;
+ 
+-    private static final String FIELD_FIRST_NAME = "field_first_name";
+-    private static final String FIELD_LAST_NAME = "field_last_name";
++    private static final String FIELD_FIRST_NAME   = "field_first_name";
++    private static final String FIELD_LAST_NAME    = "field_last_name";
+     private static final String FIELD_COMPANY_NAME = "field_company_name";
+-    private static final String FIELD_EMAIL = "field_email";
+-    private static final String FIELD_PASSWORD = "field_password";
++    private static final String FIELD_EMAIL        = "field_email";
++    private static final String FIELD_PASSWORD     = "field_password";
+ 
+     private TextInputLayout firstNameInput, lastNameInput, companyNameInput, emailInput, passwordInput;
+     private TextView passwordReqText;
+@@ -64,17 +64,18 @@
+         binding = FragmentSignupBinding.inflate(inflater, container, false);
+         View root = binding.getRoot();
+ 
+-        firstNameInput   = binding.signupFirstNameInput;
+-        lastNameInput    = binding.signupLastNameInput;
+-        companyNameInput = binding.signupCompanyNameInput;
+-        emailInput       = binding.signupEmailAddressInput;
+-        passwordInput    = binding.signupPasswordInput;
++        firstNameInput          = binding.signupFirstNameInput;
++        lastNameInput           = binding.signupLastNameInput;
++        companyNameInput        = binding.signupCompanyNameInput;
++        emailInput              = binding.signupEmailAddressInput;
++        passwordInput           = binding.signupPasswordInput;
+ 
+-        passwordReqText = binding.signupPasswordReqText;
++        passwordReqText         = binding.signupPasswordReqText;
+ 
+-        signupSuccessButton = binding.signupSuccessButton;
++        signupSuccessButton     = binding.signupSuccessButton;
+         signupProgressIndicator = binding.signupProgressIndicator;
+ 
++        // Load saved text input states on resuming from a configuration change
+         if(savedInstanceState != null) {
+             firstNameInput.getEditText().setText(savedInstanceState.getString(FIELD_FIRST_NAME));
+             lastNameInput.getEditText().setText(savedInstanceState.getString(FIELD_LAST_NAME));
+@@ -104,35 +105,28 @@
+         loginButton.setOnClickListener(this::navigateToLoginFragment);
+ 
+         signupButton = binding.signupButton;;
+-        signupButton.setOnClickListener(new View.OnClickListener() {
+-            @Override
+-            public void onClick(View view) {
+-                if(validateTextInputs()) {
+-                    mViewModel.createUser(
+-                            firstNameInput.getEditText().getText().toString(),
+-                            lastNameInput.getEditText().getText().toString(),
+-                            companyNameInput.getEditText().getText().toString(),
+-                            emailInput.getEditText().getText().toString(),
+-                            passwordInput.getEditText().getText().toString(),
+-                            SignupFragment.this
+-                    );
+-
+-                }
++        signupButton.setOnClickListener(view -> {
++            if(validateTextInputs()) {
++                mViewModel.createUser(
++                        firstNameInput.getEditText().getText().toString(),
++                        lastNameInput.getEditText().getText().toString(),
++                        companyNameInput.getEditText().getText().toString(),
++                        emailInput.getEditText().getText().toString(),
++                        passwordInput.getEditText().getText().toString(),
++                        SignupFragment.this
++                );
+             }
+         });
+ 
+-        mViewModel.observeBusyStatus(getViewLifecycleOwner(), new Observer<Boolean>() {
+-            @Override
+-            public void onChanged(Boolean busy) {
+-                if(busy) {
+-                    signupButton.setText("");
+-                    signupButton.setEnabled(false);
+-                    signupProgressIndicator.setVisibility(View.VISIBLE);
+-                } else {
+-                    signupButton.setText("SIGN UP");
+-                    signupButton.setEnabled(true);
+-                    signupProgressIndicator.setVisibility(View.GONE);
+-                }
++        mViewModel.observeBusyStatus(getViewLifecycleOwner(), busy -> {
++            if(busy) {
++                signupButton.setText("");
++                signupButton.setEnabled(false);
++                signupProgressIndicator.setVisibility(View.VISIBLE);
++            } else {
++                signupButton.setText("SIGN UP");
++                signupButton.setEnabled(true);
++                signupProgressIndicator.setVisibility(View.GONE);
+             }
+         });
+ 
+Index: app/src/main/java/com/example/spike_exercise/data/LoginRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.spike_exercise.data;\r\n\r\nimport androidx.annotation.NonNull;\r\n\r\nimport com.example.spike_exercise.data.model.LoggedInUser;\r\nimport com.example.spike_exercise.data.model.UserAccount;\r\nimport com.google.android.gms.tasks.Continuation;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\n\r\nimport java.security.InvalidParameterException;\r\n\r\n/**\r\n * Class that requests authentication and user information from the remote data source and\r\n * maintains an in-memory cache of login status and user credentials information.\r\n */\r\npublic class LoginRepository {\r\n\r\n    private static volatile LoginRepository instance;\r\n\r\n    // If user credentials will be cached in local storage, it is recommended it be encrypted\r\n    // @see https://developer.android.com/training/articles/keystore\r\n    private final FirebaseAuth firebaseAuth;\r\n    private final FirebaseFirestore firestore;\r\n    private UserAccount currentUser;\r\n\r\n    // private constructor : singleton access\r\n    private LoginRepository() {\r\n        currentUser = null;\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        firestore = FirebaseFirestore.getInstance();\r\n    }\r\n\r\n    public static synchronized LoginRepository getInstance() {\r\n        if (instance == null) {\r\n            instance = new LoginRepository();\r\n        }\r\n        return instance;\r\n    }\r\n\r\n    public boolean isLoggedIn() {\r\n        return currentUser != null;\r\n    }\r\n\r\n    public UserAccount getCurrentUser() {\r\n        return currentUser;\r\n    }\r\n\r\n    public void login(String email, String password, AuthListener authListener) {\r\n        Task<AuthResult> authTask = firebaseAuth.signInWithEmailAndPassword(email, password);\r\n        Task<DocumentSnapshot> userDataTask = authTask.continueWithTask(new Continuation<AuthResult, Task<DocumentSnapshot>>() {\r\n            @Override\r\n            public Task<DocumentSnapshot> then(@NonNull Task<AuthResult> task) throws Exception {\r\n                if(task.isSuccessful() && task.getResult() != null) {\r\n                    return firestore.collection(\"users\").document(task.getResult().getUser().getUid()).get();\r\n                } else {\r\n                    authListener.onFailure(task.getException());\r\n                }\r\n                return null;\r\n            }\r\n        });\r\n\r\n        userDataTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\r\n            @Override\r\n            public void onComplete(@NonNull Task<DocumentSnapshot> task) {\r\n                AuthResult authResult = authTask.getResult();\r\n                DocumentSnapshot userData = task.getResult();\r\n                if(task.isSuccessful() && userData != null && authResult != null) {\r\n                    currentUser = parseUserFromFirebase(authResult, userData);\r\n                    if(authListener != null) authListener.onSuccess(currentUser);\r\n                } else {\r\n                    if(authListener != null) authListener.onFailure(task.getException());\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    private static UserAccount parseUserFromFirebase(AuthResult authResult, DocumentSnapshot userData) throws InvalidParameterException {\r\n        FirebaseUser user = authResult.getUser();\r\n        if(user == null || user.getMetadata() == null) throw new InvalidParameterException(\"Invalid AuthResult for user\");\r\n        String uid = user.getUid();\r\n        String email = user.getEmail();\r\n        long creationTimestamp = user.getMetadata().getCreationTimestamp();\r\n        long lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();\r\n        Integer accountTypeFirestore = userData.get(\"accountType\", Integer.class);\r\n        String companyName = userData.get(\"companyName\", String.class);\r\n        String firstName = userData.get(\"firstName\", String.class);\r\n        String lastName = userData.get(\"lastName\", String.class);\r\n        if(uid == null || email == null) throw new InvalidParameterException(\"Invalid AuthResult for user\");\r\n        if(accountTypeFirestore == null || companyName == null || firstName == null || lastName == null) throw new InvalidParameterException(\"Invalid DocumentSnapshot for user\");\r\n        AccountType accountType = AccountType.fromFirestore(accountTypeFirestore);\r\n        return UserAccount.build(uid, email, creationTimestamp, lastSignInTimestamp, companyName, firstName, lastName, accountType);\r\n    }\r\n\r\n    public interface AuthListener {\r\n        void onSuccess(UserAccount user);\r\n        void onFailure(Exception e);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/data/LoginRepository.java b/app/src/main/java/com/example/spike_exercise/data/LoginRepository.java
+--- a/app/src/main/java/com/example/spike_exercise/data/LoginRepository.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/app/src/main/java/com/example/spike_exercise/data/LoginRepository.java	(date 1633500708132)
+@@ -1,11 +1,6 @@
+ package com.example.spike_exercise.data;
+ 
+-import androidx.annotation.NonNull;
+-
+-import com.example.spike_exercise.data.model.LoggedInUser;
+ import com.example.spike_exercise.data.model.UserAccount;
+-import com.google.android.gms.tasks.Continuation;
+-import com.google.android.gms.tasks.OnCompleteListener;
+ import com.google.android.gms.tasks.Task;
+ import com.google.firebase.auth.AuthResult;
+ import com.google.firebase.auth.FirebaseAuth;
+@@ -53,29 +48,28 @@
+ 
+     public void login(String email, String password, AuthListener authListener) {
+         Task<AuthResult> authTask = firebaseAuth.signInWithEmailAndPassword(email, password);
+-        Task<DocumentSnapshot> userDataTask = authTask.continueWithTask(new Continuation<AuthResult, Task<DocumentSnapshot>>() {
+-            @Override
+-            public Task<DocumentSnapshot> then(@NonNull Task<AuthResult> task) throws Exception {
+-                if(task.isSuccessful() && task.getResult() != null) {
+-                    return firestore.collection("users").document(task.getResult().getUser().getUid()).get();
+-                } else {
+-                    authListener.onFailure(task.getException());
+-                }
+-                return null;
+-            }
++        Task<DocumentSnapshot> userDataTask = authTask.continueWithTask(task -> {
++            if(task.isSuccessful() && task.getResult() != null) {
++                return firestore.collection("users").document(task.getResult().getUser().getUid()).get();
++            }
++            return null;
+         });
+ 
+-        userDataTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+-            @Override
+-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+-                AuthResult authResult = authTask.getResult();
+-                DocumentSnapshot userData = task.getResult();
+-                if(task.isSuccessful() && userData != null && authResult != null) {
+-                    currentUser = parseUserFromFirebase(authResult, userData);
+-                    if(authListener != null) authListener.onSuccess(currentUser);
+-                } else {
+-                    if(authListener != null) authListener.onFailure(task.getException());
+-                }
++        userDataTask.addOnCompleteListener(task -> {
++            if(!authTask.isSuccessful()) {
++                authListener.onFailure(authTask.getException());
++                return;
++            } else if(!userDataTask.isSuccessful()) {
++                authListener.onFailure(userDataTask.getException());
++                return;
++            }
++            AuthResult authResult = authTask.getResult();
++            DocumentSnapshot userData = task.getResult();
++            if(userData != null && authResult != null) {
++                currentUser = parseUserFromFirebase(authResult, userData);
++                if(authListener != null) authListener.onSuccess(currentUser);
++            } else {
++                if(authListener != null) authListener.onFailure(new IllegalStateException("Failed to retrieve user data! Please try again later."));
+             }
+         });
+     }
+@@ -83,18 +77,29 @@
+     private static UserAccount parseUserFromFirebase(AuthResult authResult, DocumentSnapshot userData) throws InvalidParameterException {
+         FirebaseUser user = authResult.getUser();
+         if(user == null || user.getMetadata() == null) throw new InvalidParameterException("Invalid AuthResult for user");
+-        String uid = user.getUid();
+-        String email = user.getEmail();
+-        long creationTimestamp = user.getMetadata().getCreationTimestamp();
+-        long lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
++
++        String  uid = user.getUid();
++        String  email = user.getEmail();
++        long    creationTimestamp = user.getMetadata().getCreationTimestamp();
++        long    lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
+         Integer accountTypeFirestore = userData.get("accountType", Integer.class);
+-        String companyName = userData.get("companyName", String.class);
+-        String firstName = userData.get("firstName", String.class);
+-        String lastName = userData.get("lastName", String.class);
++        String  companyName = userData.get("companyName", String.class);
++        String  firstName = userData.get("firstName", String.class);
++        String  lastName = userData.get("lastName", String.class);
++
+         if(uid == null || email == null) throw new InvalidParameterException("Invalid AuthResult for user");
+         if(accountTypeFirestore == null || companyName == null || firstName == null || lastName == null) throw new InvalidParameterException("Invalid DocumentSnapshot for user");
+-        AccountType accountType = AccountType.fromFirestore(accountTypeFirestore);
+-        return UserAccount.build(uid, email, creationTimestamp, lastSignInTimestamp, companyName, firstName, lastName, accountType);
++
++        return UserAccount.build(
++                uid,
++                email,
++                creationTimestamp,
++                lastSignInTimestamp,
++                companyName,
++                firstName,
++                lastName,
++                AccountType.fromFirestore(accountTypeFirestore)
++        );
+     }
+ 
+     public interface AuthListener {
+Index: app/src/main/java/com/example/spike_exercise/data/model/UserAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.spike_exercise.data.model;\r\n\r\nimport androidx.annotation.NonNull;\r\n\r\nimport com.example.spike_exercise.data.AccountType;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\n\r\nimport java.security.InvalidParameterException;\r\n\r\npublic class UserAccount {\r\n\r\n    private final String uid;\r\n    private final String emailAddress;\r\n    private final long creationTimestamp;\r\n    private final long lastSignInTimestamp;\r\n    private final String companyName;\r\n    private final String firstName;\r\n    private final String lastName;\r\n    private final AccountType accountType;\r\n\r\n    public UserAccount(String uid, String emailAddress, long creationTimestamp, long lastSignInTimestamp, String companyName, String firstName, String lastName, AccountType accountType) {\r\n        this.uid = uid;\r\n        this.emailAddress = emailAddress;\r\n        this.creationTimestamp = creationTimestamp;\r\n        this.lastSignInTimestamp = lastSignInTimestamp;\r\n        this.companyName = companyName;\r\n        this.firstName = firstName;\r\n        this.lastName = lastName;\r\n        this.accountType = accountType;\r\n    }\r\n\r\n    public String getUid() {\r\n        return uid;\r\n    }\r\n\r\n    public String getEmailAddress() {\r\n        return emailAddress;\r\n    }\r\n\r\n    public long getCreationTimestamp() {\r\n        return creationTimestamp;\r\n    }\r\n\r\n    public long getLastSignInTimestamp() {\r\n        return lastSignInTimestamp;\r\n    }\r\n\r\n    public String getCompanyName() {\r\n        return companyName;\r\n    }\r\n\r\n    public String getFirstName() {\r\n        return firstName;\r\n    }\r\n\r\n    public String getLastName() {\r\n        return lastName;\r\n    }\r\n\r\n    public AccountType getAccountType() {\r\n        return accountType;\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public String toString() {\r\n        final StringBuilder sb = new StringBuilder(\"UserAccount{\");\r\n        sb.append(\"uid='\").append(uid).append('\\'');\r\n        sb.append(\", emailAddress='\").append(emailAddress).append('\\'');\r\n        sb.append(\", creationTimestamp=\").append(creationTimestamp);\r\n        sb.append(\", lastSignInTimestamp=\").append(lastSignInTimestamp);\r\n        sb.append(\", companyName='\").append(companyName).append('\\'');\r\n        sb.append(\", firstName='\").append(firstName).append('\\'');\r\n        sb.append(\", lastName='\").append(lastName).append('\\'');\r\n        sb.append(\", accountType=\").append(accountType);\r\n        sb.append('}');\r\n        return sb.toString();\r\n    }\r\n\r\n    public static UserAccount build(String uid, String emailAddress, long creationTimestamp, long lastSignInTimestamp, String companyName, String firstName, String lastName, AccountType accountType) {\r\n        return new UserAccount(uid, emailAddress, creationTimestamp, lastSignInTimestamp, companyName, firstName, lastName, accountType);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/data/model/UserAccount.java b/app/src/main/java/com/example/spike_exercise/data/model/UserAccount.java
+--- a/app/src/main/java/com/example/spike_exercise/data/model/UserAccount.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/app/src/main/java/com/example/spike_exercise/data/model/UserAccount.java	(date 1633498788089)
+@@ -21,7 +21,7 @@
+     private final String lastName;
+     private final AccountType accountType;
+ 
+-    public UserAccount(String uid, String emailAddress, long creationTimestamp, long lastSignInTimestamp, String companyName, String firstName, String lastName, AccountType accountType) {
++    private UserAccount(String uid, String emailAddress, long creationTimestamp, long lastSignInTimestamp, String companyName, String firstName, String lastName, AccountType accountType) {
+         this.uid = uid;
+         this.emailAddress = emailAddress;
+         this.creationTimestamp = creationTimestamp;
+Index: app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.spike_exercise.ui.login;\r\n\r\nimport androidx.lifecycle.LifecycleOwner;\r\nimport androidx.lifecycle.LiveData;\r\nimport androidx.lifecycle.MutableLiveData;\r\nimport androidx.lifecycle.Observer;\r\nimport androidx.lifecycle.ViewModel;\r\n\r\nimport android.util.Patterns;\r\n\r\nimport com.example.spike_exercise.data.LoginRepository;\r\nimport com.example.spike_exercise.data.Result;\r\nimport com.example.spike_exercise.data.model.LoggedInUser;\r\nimport com.example.spike_exercise.R;\r\n\r\npublic class LoginViewModel extends ViewModel {\r\n\r\n    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();\r\n    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();\r\n    private LoginRepository loginRepository;\r\n    private final MutableLiveData<Boolean> busyStatus;\r\n\r\n    LoginViewModel(LoginRepository loginRepository) {\r\n        this.loginRepository = loginRepository;\r\n        this.busyStatus = new MutableLiveData<>();\r\n    }\r\n\r\n    LiveData<LoginFormState> getLoginFormState() {\r\n        return loginFormState;\r\n    }\r\n\r\n    LiveData<LoginResult> getLoginResult() {\r\n        return loginResult;\r\n    }\r\n\r\n    public void login(String email, String password, LoginRepository.AuthListener authListener) {\r\n        LoginRepository.getInstance().login(email, password, authListener);\r\n    }\r\n\r\n    public void setBusyStatus(boolean isBusy) {\r\n        busyStatus.setValue(isBusy);\r\n    }\r\n\r\n    public void observeBusyStatus(LifecycleOwner lifecycleOwner, Observer<? super Boolean> observer) {\r\n        busyStatus.observe(lifecycleOwner, observer);\r\n    }\r\n\r\n    public boolean isBusy() {\r\n        return busyStatus.getValue();\r\n    }\r\n\r\n    public boolean validateRequiredField(String fieldText) {\r\n        return fieldText != null && !fieldText.isEmpty();\r\n    }\r\n\r\n    public boolean validateEmailField(String emailText) {\r\n        return emailText != null && Patterns.EMAIL_ADDRESS.matcher(emailText).matches();\r\n    }\r\n\r\n    public boolean validatePasswordField(String passwordText) {\r\n        return passwordText != null && !passwordText.isEmpty();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModel.java b/app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModel.java
+--- a/app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModel.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/app/src/main/java/com/example/spike_exercise/ui/login/LoginViewModel.java	(date 1633500708138)
+@@ -9,15 +9,10 @@
+ import android.util.Patterns;
+ 
+ import com.example.spike_exercise.data.LoginRepository;
+-import com.example.spike_exercise.data.Result;
+-import com.example.spike_exercise.data.model.LoggedInUser;
+-import com.example.spike_exercise.R;
+ 
+ public class LoginViewModel extends ViewModel {
+ 
+-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
+-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+-    private LoginRepository loginRepository;
++    private final LoginRepository          loginRepository;
+     private final MutableLiveData<Boolean> busyStatus;
+ 
+     LoginViewModel(LoginRepository loginRepository) {
+@@ -25,16 +20,8 @@
+         this.busyStatus = new MutableLiveData<>();
+     }
+ 
+-    LiveData<LoginFormState> getLoginFormState() {
+-        return loginFormState;
+-    }
+-
+-    LiveData<LoginResult> getLoginResult() {
+-        return loginResult;
+-    }
+-
+     public void login(String email, String password, LoginRepository.AuthListener authListener) {
+-        LoginRepository.getInstance().login(email, password, authListener);
++        loginRepository.login(email, password, authListener);
+     }
+ 
+     public void setBusyStatus(boolean isBusy) {
+Index: app/src/main/java/com/example/spike_exercise/data/Result.java
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/data/Result.java b/app/src/main/java/com/example/spike_exercise/data/Result.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/spike_exercise/data/Result.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ /dev/null	(revision 245bc181440d7953a1618f3231476400009ea912)
+@@ -1,48 +0,0 @@
+-package com.example.spike_exercise.data;
+-
+-/**
+- * A generic class that holds a result success w/ data or an error exception.
+- */
+-public class Result<T> {
+-    // hide the private constructor to limit subclass types (Success, Error)
+-    private Result() {
+-    }
+-
+-    @Override
+-    public String toString() {
+-        if (this instanceof Result.Success) {
+-            Result.Success success = (Result.Success) this;
+-            return "Success[data=" + success.getData().toString() + "]";
+-        } else if (this instanceof Result.Error) {
+-            Result.Error error = (Result.Error) this;
+-            return "Error[exception=" + error.getError().toString() + "]";
+-        }
+-        return "";
+-    }
+-
+-    // Success sub-class
+-    public final static class Success<T> extends Result {
+-        private T data;
+-
+-        public Success(T data) {
+-            this.data = data;
+-        }
+-
+-        public T getData() {
+-            return this.data;
+-        }
+-    }
+-
+-    // Error sub-class
+-    public final static class Error extends Result {
+-        private Exception error;
+-
+-        public Error(Exception error) {
+-            this.error = error;
+-        }
+-
+-        public Exception getError() {
+-            return this.error;
+-        }
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/example/spike_exercise/ui/signup/SignupFormValidation.java
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/signup/SignupFormValidation.java b/app/src/main/java/com/example/spike_exercise/ui/signup/SignupFormValidation.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/spike_exercise/ui/signup/SignupFormValidation.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ /dev/null	(revision 245bc181440d7953a1618f3231476400009ea912)
+@@ -1,14 +0,0 @@
+-package com.example.spike_exercise.ui.signup;
+-
+-public class SignupFormValidation {
+-
+-    public enum Error {
+-        FIRST_NAME_EMPTY, LAST_NAME_EMPTY,
+-    }
+-
+-    private boolean formValid;
+-
+-    public boolean isFormValid() {
+-        return formValid;
+-    }
+-}
+Index: app/src/main/java/com/example/spike_exercise/data/LoginDataSource.java
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/data/LoginDataSource.java b/app/src/main/java/com/example/spike_exercise/data/LoginDataSource.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/spike_exercise/data/LoginDataSource.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ /dev/null	(revision 245bc181440d7953a1618f3231476400009ea912)
+@@ -1,29 +0,0 @@
+-package com.example.spike_exercise.data;
+-
+-import com.example.spike_exercise.data.model.LoggedInUser;
+-
+-import java.io.IOException;
+-
+-/**
+- * Class that handles authentication w/ login credentials and retrieves user information.
+- */
+-public class LoginDataSource {
+-
+-    public Result<LoggedInUser> login(String username, String password) {
+-
+-        try {
+-            // TODO: handle loggedInUser authentication
+-            LoggedInUser fakeUser =
+-                    new LoggedInUser(
+-                            java.util.UUID.randomUUID().toString(),
+-                            "Jane Doe");
+-            return new Result.Success<>(fakeUser);
+-        } catch (Exception e) {
+-            return new Result.Error(new IOException("Error logging in", e));
+-        }
+-    }
+-
+-    public void logout() {
+-        // TODO: revoke authentication
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/example/spike_exercise/ui/login/LoggedInUserView.java
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/login/LoggedInUserView.java b/app/src/main/java/com/example/spike_exercise/ui/login/LoggedInUserView.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/spike_exercise/ui/login/LoggedInUserView.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ /dev/null	(revision 245bc181440d7953a1618f3231476400009ea912)
+@@ -1,17 +0,0 @@
+-package com.example.spike_exercise.ui.login;
+-
+-/**
+- * Class exposing authenticated user details to the UI.
+- */
+-class LoggedInUserView {
+-    private String displayName;
+-    //... other data fields that may be accessible to the UI
+-
+-    LoggedInUserView(String displayName) {
+-        this.displayName = displayName;
+-    }
+-
+-    String getDisplayName() {
+-        return displayName;
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/example/spike_exercise/ui/login/LoginFormState.java
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/login/LoginFormState.java b/app/src/main/java/com/example/spike_exercise/ui/login/LoginFormState.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/spike_exercise/ui/login/LoginFormState.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ /dev/null	(revision 245bc181440d7953a1618f3231476400009ea912)
+@@ -1,40 +0,0 @@
+-package com.example.spike_exercise.ui.login;
+-
+-import androidx.annotation.Nullable;
+-
+-/**
+- * Data validation state of the login form.
+- */
+-class LoginFormState {
+-    @Nullable
+-    private Integer usernameError;
+-    @Nullable
+-    private Integer passwordError;
+-    private boolean isDataValid;
+-
+-    LoginFormState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
+-        this.usernameError = usernameError;
+-        this.passwordError = passwordError;
+-        this.isDataValid = false;
+-    }
+-
+-    LoginFormState(boolean isDataValid) {
+-        this.usernameError = null;
+-        this.passwordError = null;
+-        this.isDataValid = isDataValid;
+-    }
+-
+-    @Nullable
+-    Integer getUsernameError() {
+-        return usernameError;
+-    }
+-
+-    @Nullable
+-    Integer getPasswordError() {
+-        return passwordError;
+-    }
+-
+-    boolean isDataValid() {
+-        return isDataValid;
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/example/spike_exercise/data/model/LoggedInUser.java
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/data/model/LoggedInUser.java b/app/src/main/java/com/example/spike_exercise/data/model/LoggedInUser.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/spike_exercise/data/model/LoggedInUser.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ /dev/null	(revision 245bc181440d7953a1618f3231476400009ea912)
+@@ -1,23 +0,0 @@
+-package com.example.spike_exercise.data.model;
+-
+-/**
+- * Data class that captures user information for logged in users retrieved from LoginRepository
+- */
+-public class LoggedInUser {
+-
+-    private String userId;
+-    private String displayName;
+-
+-    public LoggedInUser(String userId, String displayName) {
+-        this.userId = userId;
+-        this.displayName = displayName;
+-    }
+-
+-    public String getUserId() {
+-        return userId;
+-    }
+-
+-    public String getDisplayName() {
+-        return displayName;
+-    }
+-}
+\ No newline at end of file
+Index: app/src/main/java/com/example/spike_exercise/ui/login/LoginResult.java
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/login/LoginResult.java b/app/src/main/java/com/example/spike_exercise/ui/login/LoginResult.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/spike_exercise/ui/login/LoginResult.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ /dev/null	(revision 245bc181440d7953a1618f3231476400009ea912)
+@@ -1,31 +0,0 @@
+-package com.example.spike_exercise.ui.login;
+-
+-import androidx.annotation.Nullable;
+-
+-/**
+- * Authentication result : success (user details) or error message.
+- */
+-class LoginResult {
+-    @Nullable
+-    private LoggedInUserView success;
+-    @Nullable
+-    private Integer error;
+-
+-    LoginResult(@Nullable Integer error) {
+-        this.error = error;
+-    }
+-
+-    LoginResult(@Nullable LoggedInUserView success) {
+-        this.success = success;
+-    }
+-
+-    @Nullable
+-    LoggedInUserView getSuccess() {
+-        return success;
+-    }
+-
+-    @Nullable
+-    Integer getError() {
+-        return error;
+-    }
+-}
+\ No newline at end of file

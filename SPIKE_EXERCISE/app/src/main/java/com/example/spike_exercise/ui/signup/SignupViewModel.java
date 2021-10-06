@@ -18,6 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -81,18 +82,15 @@ public class SignupViewModel extends ViewModel implements OnCompleteListener<Voi
         userData.put("lastName", lastName);
         userData.put("companyName", companyName);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        Task<Void> signupTask = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password)
-                .continueWithTask(new Continuation<AuthResult, Task<Void>>() {
-                    @Override
-                    public Task<Void> then(@NonNull Task<AuthResult> task) throws Exception {
-                        if(task.isSuccessful()) {
-                            FirebaseUser newUser = task.getResult().getUser();
-                            DocumentReference newUserDataDocument = firestore.collection("users").document(newUser.getUid());
-                            return newUserDataDocument.set(userData);
-                        }
-                        return null;
-                    }
-                });
+        Task<AuthResult> authTask = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password);
+        Task<Void> signupTask = authTask.continueWithTask(task -> {
+            if(task.isSuccessful() && task.getResult() != null && task.getResult().getUser() != null) {
+                FirebaseUser newUser = task.getResult().getUser();
+                DocumentReference newUserDataDocument = firestore.collection("users").document(newUser.getUid());
+                return newUserDataDocument.set(userData);
+            }
+            return null;
+        });
         signupTask.addOnCompleteListener(this);
         signupTask.addOnCompleteListener(onCompleteListener);
     }

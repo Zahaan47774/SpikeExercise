@@ -41,11 +41,11 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
     private SignupViewModel mViewModel;
     private FragmentSignupBinding binding;
 
-    private static final String FIELD_FIRST_NAME = "field_first_name";
-    private static final String FIELD_LAST_NAME = "field_last_name";
+    private static final String FIELD_FIRST_NAME   = "field_first_name";
+    private static final String FIELD_LAST_NAME    = "field_last_name";
     private static final String FIELD_COMPANY_NAME = "field_company_name";
-    private static final String FIELD_EMAIL = "field_email";
-    private static final String FIELD_PASSWORD = "field_password";
+    private static final String FIELD_EMAIL        = "field_email";
+    private static final String FIELD_PASSWORD     = "field_password";
 
     private TextInputLayout firstNameInput, lastNameInput, companyNameInput, emailInput, passwordInput;
     private TextView passwordReqText;
@@ -64,17 +64,18 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
         binding = FragmentSignupBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        firstNameInput   = binding.signupFirstNameInput;
-        lastNameInput    = binding.signupLastNameInput;
-        companyNameInput = binding.signupCompanyNameInput;
-        emailInput       = binding.signupEmailAddressInput;
-        passwordInput    = binding.signupPasswordInput;
+        firstNameInput          = binding.signupFirstNameInput;
+        lastNameInput           = binding.signupLastNameInput;
+        companyNameInput        = binding.signupCompanyNameInput;
+        emailInput              = binding.signupEmailAddressInput;
+        passwordInput           = binding.signupPasswordInput;
 
-        passwordReqText = binding.signupPasswordReqText;
+        passwordReqText         = binding.signupPasswordReqText;
 
-        signupSuccessButton = binding.signupSuccessButton;
+        signupSuccessButton     = binding.signupSuccessButton;
         signupProgressIndicator = binding.signupProgressIndicator;
 
+        // Load saved text input states on resuming from a configuration change
         if(savedInstanceState != null) {
             firstNameInput.getEditText().setText(savedInstanceState.getString(FIELD_FIRST_NAME));
             lastNameInput.getEditText().setText(savedInstanceState.getString(FIELD_LAST_NAME));
@@ -104,35 +105,28 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
         loginButton.setOnClickListener(this::navigateToLoginFragment);
 
         signupButton = binding.signupButton;;
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(validateTextInputs()) {
-                    mViewModel.createUser(
-                            firstNameInput.getEditText().getText().toString(),
-                            lastNameInput.getEditText().getText().toString(),
-                            companyNameInput.getEditText().getText().toString(),
-                            emailInput.getEditText().getText().toString(),
-                            passwordInput.getEditText().getText().toString(),
-                            SignupFragment.this
-                    );
-
-                }
+        signupButton.setOnClickListener(view -> {
+            if(validateTextInputs()) {
+                mViewModel.createUser(
+                        firstNameInput.getEditText().getText().toString(),
+                        lastNameInput.getEditText().getText().toString(),
+                        companyNameInput.getEditText().getText().toString(),
+                        emailInput.getEditText().getText().toString(),
+                        passwordInput.getEditText().getText().toString(),
+                        SignupFragment.this
+                );
             }
         });
 
-        mViewModel.observeBusyStatus(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean busy) {
-                if(busy) {
-                    signupButton.setText("");
-                    signupButton.setEnabled(false);
-                    signupProgressIndicator.setVisibility(View.VISIBLE);
-                } else {
-                    signupButton.setText("SIGN UP");
-                    signupButton.setEnabled(true);
-                    signupProgressIndicator.setVisibility(View.GONE);
-                }
+        mViewModel.observeBusyStatus(getViewLifecycleOwner(), busy -> {
+            if(busy) {
+                signupButton.setText("");
+                signupButton.setEnabled(false);
+                signupProgressIndicator.setVisibility(View.VISIBLE);
+            } else {
+                signupButton.setText("SIGN UP");
+                signupButton.setEnabled(true);
+                signupProgressIndicator.setVisibility(View.GONE);
             }
         });
 
