@@ -4,15 +4,16 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.spike_exercise.data.LoginRepository;
+import com.example.spike_exercise.data.model.UserAccount;
+import com.example.spike_exercise.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import com.example.spike_exercise.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +33,17 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_maintenance, R.id.navigation_payment, R.id.navigation_apply)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        NavGraph navGraph = null;
+        UserAccount user = LoginRepository.getInstance().getCurrentUser();
+        switch(user.getAccountType()) {
+            case TENANT:
+                navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
+                break;
+            case LANDLORD:
+                navGraph = navController.getNavInflater().inflate(R.navigation.navigation_main_landlord);
+                break;
+        }
+        navController.setGraph(navGraph);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
