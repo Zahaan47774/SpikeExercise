@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -38,7 +41,8 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
     private LandlordMaintenanceFragmentBinding binding;
 
     // buttons and text fields
-    private TextView textview1, textView2;
+    private TextView textView1, textView2;
+    private EditText editText1;
     private String userID;
     private Button button1, button2;
 
@@ -56,36 +60,59 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
 
         button1 = binding.buttonDisplayRequest;
         button2 = binding.buttonSendMessage;
-        textview1 = binding.textViewDisplayUser;
+        textView1 = binding.textViewDisplayUser;
         textView2 = binding.textViewRequest;
+        editText1 = binding.editTextSendMessage;
 
         db = FirebaseFirestore.getInstance();
         // retrieves collection of requests
         ArrayList<Request> list = new ArrayList<>();
-
-
-        // displays new request
-        button1.setOnClickListener(new View.OnClickListener() {
+        // collects requests in list
+        db.collection("maintananence").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onClick(View view) {
-                // need to retrieve data from database
-                // display user id within textview1
-                // display maintenance request within textview2
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request")));
+                    }
+                } else {
+                    System.out.println("Error");
+                }
             }
         });
 
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // need to retrieve data from database
-                // display user id
-                // display maintenance request
-            }
-        });
+        //check if list is empty
+        if (list.isEmpty()) {
+            textView1.setText("");
+            textView2.setText("No Maintenance requests");
+        }
 
+        for (int i = 0; i < list.size(); i++) {
+            // displays new request and user info
+            int finalI = i; // necessary for inner class to access variable
+            button1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // display user id within textview1
+                    textView1.setText(list.get(finalI).getTenantID());
+                    // display maintenance request within textview2
+                    textView2.setText(list.get(finalI).getRequest());
+                }
+            });
+            // sends message to user
+            button2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // update requests with landlord response
+                    list.get(finalI).setResponse(editText1.getText().toString());
+                }
+            });
+            if (i == list.size() - 1) {
+                i = 0;
+            }
+        }
         return root;
     }
-
 
     @Override
     public void onDestroyView() {
