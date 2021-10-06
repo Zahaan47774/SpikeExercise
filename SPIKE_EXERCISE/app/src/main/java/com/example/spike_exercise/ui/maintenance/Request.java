@@ -2,15 +2,25 @@ package com.example.spike_exercise.ui.maintenance;
 
 public class Request {
     public String userID,tenantID;
-    public String request;
+    public String request,response;
     public Request(String userID,String tenantID,String request){
         this.userID = userID;
         this.tenantID = tenantID;
         this.request = request;
+        this.response = "";
     }
     public Request(){
 
     }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
     public String getTenantID() {
         return tenantID;
     }
