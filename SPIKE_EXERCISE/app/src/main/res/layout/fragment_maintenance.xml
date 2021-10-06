@@ -52,19 +52,18 @@
         android:id="@+id/imageView"
         android:layout_width="273dp"
         android:layout_height="158dp"
-        android:src="@android:drawable/ic_menu_info_details"
+        android:src="@drawable/madrentals_logo_only"
         app:layout_constraintBottom_toTopOf="@+id/spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.227"
-        app:srcCompat="@drawable/madrentals_logo_only" />
+        app:layout_constraintVertical_bias="0.227" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="294dp"
         android:layout_height="73dp"
-        android:text="TextView"
+        android:text="Submit Your Maintanence Request Below"
         android:textAlignment="center"
         android:textColor="@color/madrentals_red_light"
         android:textSize="24sp"
@@ -74,8 +73,7 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.28"
-        tools:text="Submit Your Maintanence Request Below" />
+        app:layout_constraintVertical_bias="0.28" />
 
     <TextView
         android:id="@+id/textView2"
