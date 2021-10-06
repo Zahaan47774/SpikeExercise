@@ -6,17 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".ui.apply.ApplyFragment">
 
-    <TextView
-        android:id="@+id/text_notifications"
+    <TableRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent" >
+
+    </TableRow>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="339dp"
+            android:layout_height="94dp"
+            android:layout_marginTop="10dp"
+            android:text="Application"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/application_name"
+            android:layout_width="315dp"
+            android:layout_height="38dp"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="Full Name"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/application_apply_address"
+            android:layout_width="324dp"
+            android:layout_height="37dp"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:text="Please enter the address you are applying to"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="395dp"
+            android:layout_height="87dp"
+            android:layout_marginRight="50dp"
+            android:text="Submit" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
