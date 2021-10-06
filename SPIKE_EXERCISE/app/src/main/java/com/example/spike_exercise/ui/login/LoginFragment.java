@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.spike_exercise.MainActivity;
+import com.example.spike_exercise.data.LoginRepository;
+import com.example.spike_exercise.data.model.UserAccount;
 import com.example.spike_exercise.databinding.FragmentLoginBinding;
 
 import com.example.spike_exercise.R;
@@ -36,7 +38,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LoginFragment extends Fragment implements OnCompleteListener<AuthResult> {
+public class LoginFragment extends Fragment implements LoginRepository.AuthListener {
 
     private LoginViewModel       loginViewModel;
     private FragmentLoginBinding binding;
@@ -77,9 +79,7 @@ public class LoginFragment extends Fragment implements OnCompleteListener<AuthRe
             public void onClick(View view) {
                 if(validateTextInputs()) {
                     loginViewModel.setBusyStatus(true);
-                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                    Task<AuthResult> signupTask = firebaseAuth.signInWithEmailAndPassword(emailInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
-                    signupTask.addOnCompleteListener(LoginFragment.this);
+                    loginViewModel.login(emailInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString(), LoginFragment.this);
                 }
             }
         });
@@ -135,17 +135,19 @@ public class LoginFragment extends Fragment implements OnCompleteListener<AuthRe
     }
 
     @Override
-    public void onComplete(@NonNull Task<AuthResult> task) {
+    public void onSuccess(UserAccount user) {
         loginViewModel.setBusyStatus(false);
-        if(task.isSuccessful()) {
-            navigateToMainActivity();
+        navigateToMainActivity();
+    }
+
+    @Override
+    public void onFailure(Exception e) {
+        loginViewModel.setBusyStatus(false);
+        String errorMessage = e.getMessage().toLowerCase();
+        if(errorMessage.contains("email") || errorMessage.contains("password") || errorMessage.contains("no user")) {
+            passwordInput.setError("Oops! The email address or password you entered was incorrect.");
         } else {
-            String errorMessage = task.getException().getMessage().toLowerCase();
-            if(errorMessage.contains("email") || errorMessage.contains("password") || errorMessage.contains("no user")) {
-                passwordInput.setError("Oops! The email address or password you entered was incorrect.");
-            } else {
-                passwordInput.setError(task.getException().getMessage());
-            }
+            passwordInput.setError(e.getMessage());
         }
     }
 }

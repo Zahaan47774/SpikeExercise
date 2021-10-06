@@ -30,8 +30,13 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class SignupFragment extends Fragment implements OnCompleteListener<AuthResult> {
+import java.util.HashMap;
+import java.util.Map;
+
+public class SignupFragment extends Fragment implements OnCompleteListener<Void> {
 
     private SignupViewModel mViewModel;
     private FragmentSignupBinding binding;
@@ -103,10 +108,15 @@ public class SignupFragment extends Fragment implements OnCompleteListener<AuthR
             @Override
             public void onClick(View view) {
                 if(validateTextInputs()) {
-                    mViewModel.setBusyStatus(true);
-                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                    Task<AuthResult> signupTask = firebaseAuth.createUserWithEmailAndPassword(emailInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
-                    signupTask.addOnCompleteListener(SignupFragment.this);
+                    mViewModel.createUser(
+                            firstNameInput.getEditText().getText().toString(),
+                            lastNameInput.getEditText().getText().toString(),
+                            companyNameInput.getEditText().getText().toString(),
+                            emailInput.getEditText().getText().toString(),
+                            passwordInput.getEditText().getText().toString(),
+                            SignupFragment.this
+                    );
+
                 }
             }
         });
@@ -180,12 +190,10 @@ public class SignupFragment extends Fragment implements OnCompleteListener<AuthR
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(SignupViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     @Override
-    public void onComplete(@NonNull Task<AuthResult> task) {
-        mViewModel.setBusyStatus(false);
+    public void onComplete(@NonNull Task<Void> task) {
         if(task.isSuccessful()) {
             signupButton.setVisibility(View.INVISIBLE);
             signupSuccessButton.setVisibility(View.VISIBLE);
@@ -195,7 +203,7 @@ public class SignupFragment extends Fragment implements OnCompleteListener<AuthR
                 public void run() {
                     navigateToLoginFragment(signupButton);
                 }
-            }, 1000);
+            }, 500);
         }
     }
 }
