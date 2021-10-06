@@ -14,8 +14,8 @@
         <entry key="app/src/main/res/layout/activity_account.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/fragment_apply.xml" value="0.19519927536231885" />
-        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.19519927536231885" />
-        <entry key="app/src/main/res/layout/fragment_maintenance.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_maintenance.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.19519927536231885" />
       </map>
