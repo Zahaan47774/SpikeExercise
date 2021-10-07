@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.maintenance.LandlordMaintenanceFragment">
+
+    <Button
+        android:id="@+id/buttonDisplayRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="98dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="98dp"
+        android:text="Display Next Request"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewRequest"
+        android:layout_width="212dp"
+        android:layout_height="266dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="100dp"
+        android:text="Request details"
+        android:textAlignment="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDisplayUser" />
+
+    <EditText
+        android:id="@+id/editTextSendMessage"
+        android:layout_width="212dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="100dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Send a Message Back"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRequest" />
+
+    <Button
+        android:id="@+id/buttonSendMessage"
+        android:layout_width="102dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="152dp"
+        android:layout_marginBottom="44dp"
+        android:text="Send"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextSendMessage"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textViewDisplayUser"
+        android:layout_width="212dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="100dp"
+        android:text="Tenant ID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonDisplayRequest" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

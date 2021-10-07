@@ -40,8 +40,7 @@ public class MaintenanceFragment extends Fragment implements OnCompleteListener<
     String userID;
     String company;
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState
-    ) {
+                             ViewGroup container, Bundle savedInstanceState) {
         MaintenanceViewModel maintenanceViewModel = new ViewModelProvider(this).get(MaintenanceViewModel.class);
 
         binding = FragmentMaintenanceBinding.inflate(inflater, container, false);
@@ -95,7 +94,6 @@ public class MaintenanceFragment extends Fragment implements OnCompleteListener<
         Task<DocumentReference> signupTask = db.collection("maintananence").add(request);
         signupTask.addOnCompleteListener(MaintenanceFragment.this);
     }
-
 
 
     @Override

@@ -9,15 +9,10 @@ import androidx.lifecycle.ViewModel;
 import android.util.Patterns;
 
 import com.example.spike_exercise.data.LoginRepository;
-import com.example.spike_exercise.data.Result;
-import com.example.spike_exercise.data.model.LoggedInUser;
-import com.example.spike_exercise.R;
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private final LoginRepository          loginRepository;
     private final MutableLiveData<Boolean> busyStatus;
 
     LoginViewModel(LoginRepository loginRepository) {
@@ -25,16 +20,8 @@ public class LoginViewModel extends ViewModel {
         this.busyStatus = new MutableLiveData<>();
     }
 
-    LiveData<LoginFormState> getLoginFormState() {
-        return loginFormState;
-    }
-
-    LiveData<LoginResult> getLoginResult() {
-        return loginResult;
-    }
-
     public void login(String email, String password, LoginRepository.AuthListener authListener) {
-        LoginRepository.getInstance().login(email, password, authListener);
+        loginRepository.login(email, password, authListener);
     }
 
     public void setBusyStatus(boolean isBusy) {

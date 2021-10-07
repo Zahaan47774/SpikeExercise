@@ -21,7 +21,7 @@ public class UserAccount {
     private final String lastName;
     private final AccountType accountType;
 
-    public UserAccount(String uid, String emailAddress, long creationTimestamp, long lastSignInTimestamp, String companyName, String firstName, String lastName, AccountType accountType) {
+    private UserAccount(String uid, String emailAddress, long creationTimestamp, long lastSignInTimestamp, String companyName, String firstName, String lastName, AccountType accountType) {
         this.uid = uid;
         this.emailAddress = emailAddress;
         this.creationTimestamp = creationTimestamp;

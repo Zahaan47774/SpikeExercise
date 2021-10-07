@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_payment">
+
+    <fragment
+        android:id="@+id/navigation_payment"
+        android:name="com.example.spike_exercise.ui.payment.PaymentFragment"
+        android:label="@string/title_payment"
+        tools:layout="@layout/fragment_payment" />
+
+    <fragment
+        android:id="@+id/navigation_maintenance"
+        android:name="com.example.spike_exercise.ui.maintenance.LandlordMaintenanceFragment"
+        android:label="Maintenance Landlord"
+        tools:layout="@layout/landlord_maintenance_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_apply"
+        android:name="com.example.spike_exercise.ui.apply.ApplyFragment"
+        android:label="@string/title_apply"
+        tools:layout="@layout/fragment_apply" />
+</navigation>
