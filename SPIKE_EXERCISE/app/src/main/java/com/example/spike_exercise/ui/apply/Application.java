@@ -5,11 +5,12 @@ public class Application
     public String userID;
     public String name;
     public String applyAddress;
-
-    public Application(String newID,String newName, String newAddress){
+    public String company;
+    public Application(String newID,String newName, String newAddress, String newCompany){
         this.userID = newID;
         this.name = newName;
         this.applyAddress = newAddress;
+        this.company = newCompany;
     }
     public void setName(String newName){
         this.name = newName;
@@ -20,6 +21,7 @@ public class Application
     public void setApplyAddress(String newAddress){
         this.applyAddress = newAddress;
     }
+    public void setCompany(String newCompany) { this.company = newCompany;}
     public String getUserID(){
         return this.userID;
     }
@@ -29,4 +31,5 @@ public class Application
     public String getApplyAddress(){
         return this.applyAddress;
     }
+    public String getCompany() {return this.company;}
 }
