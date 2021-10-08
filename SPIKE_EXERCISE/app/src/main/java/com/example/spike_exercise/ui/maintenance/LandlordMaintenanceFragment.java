@@ -34,7 +34,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-
 public class LandlordMaintenanceFragment extends Fragment implements OnCompleteListener<DocumentReference> {
 
     private LandlordMaintenanceViewModel LandlordMaintenanceViewModel;
@@ -46,7 +45,6 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
     private String userID;
     private Button button1, button2;
 
-    // firebase stuff
     FirebaseFirestore db;
     FirebaseAuth auth;
 
@@ -68,6 +66,15 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
         // retrieves collection of requests
         ArrayList<Request> list = new ArrayList<>();
         // collects requests in list
+
+        /*
+        db.collection("mainanantence").get().then(function(querySnapshot)) {
+            querySnapshot.forEach(function(doc)) {
+                list.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request")));
+            });
+        });
+        */
+
         db.collection("maintananence").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -84,33 +91,39 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
         //check if list is empty
         if (list.isEmpty()) {
             textView1.setText("");
-            textView2.setText("No Maintenance requests");
+            textView2.setText("No Maintenance requests"); //test later
+        } else {
+            textView1.setText("Error Ocurred");
+            textView2.setText("Error Ocurred");
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            // displays new request and user info
-            int finalI = i; // necessary for inner class to access variable
-            button1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // display user id within textview1
-                    textView1.setText(list.get(finalI).getTenantID());
-                    // display maintenance request within textview2
-                    textView2.setText(list.get(finalI).getRequest());
+        int index = 0;
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // display user id within textview1
+                if (index == list.size()) {
+                    index = 0;
                 }
-            });
-            // sends message to user
-            button2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // update requests with landlord response
-                    list.get(finalI).setResponse(editText1.getText().toString());
-                }
-            });
-            if (i == list.size() - 1) {
-                i = 0;
+                textView1.setText(list.get(index).getTenantID());
+                // display maintenance request within textview2
+                textView2.setText(list.get(index).getRequest());
+                index++;
             }
-        }
+        });
+        // sends message to user
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // update requests with landlord response
+                list.get(index).setResponse(editText1.getText().toString());
+
+            }
+        });
+
+        //db.collection("maintananence").
+        // still need to update firebase
+
         return root;
     }
 
@@ -118,6 +131,12 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void save(View v){
+        Request request = new Request(userID,company,ed3.getText().toString());
+        Task<DocumentReference> signupTask = db.collection("maintananence").add(request);
+        signupTask.addOnCompleteListener(MaintenanceFragment.this);
     }
 
     private void navigateToMaintenanceActivity() {

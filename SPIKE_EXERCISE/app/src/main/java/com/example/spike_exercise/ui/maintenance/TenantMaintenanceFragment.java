@@ -90,7 +90,6 @@ public class TenantMaintenanceFragment extends Fragment implements OnCompleteLis
         signupTask.addOnCompleteListener(TenantMaintenanceFragment.this);
     }
 
-
     @Override
     public void onComplete(@NonNull Task<DocumentReference> task) {
         //loginViewModel.setBusyStatus(false);

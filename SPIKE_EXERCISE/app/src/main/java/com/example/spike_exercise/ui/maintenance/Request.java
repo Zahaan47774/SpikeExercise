@@ -3,6 +3,7 @@ package com.example.spike_exercise.ui.maintenance;
 public class Request {
     public String userID,tenantID;
     public String request,response;
+    public boolean priority;
     public Request(String userID,String tenantID,String request){
         this.userID = userID;
         this.tenantID = tenantID;
@@ -11,6 +12,14 @@ public class Request {
     }
     public Request(){
 
+    }
+
+    public void setPriority(boolean priority) {
+        this.priority = priority;
+    }
+
+    public boolean isPriority() {
+        return priority;
     }
 
     public String getResponse() {
