@@ -11,13 +11,39 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.spike_exercise.R;
+import com.example.spike_exercise.data.LoginRepository;
+import com.example.spike_exercise.databinding.FragmentLandlordPaymentBinding;
+import com.example.spike_exercise.databinding.FragmentTenantMaintenanceBinding;
+import com.example.spike_exercise.ui.maintenance.Request;
+import com.example.spike_exercise.ui.maintenance.TenantMaintenanceFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class LandlordPaymentFragment extends Fragment {
 
     private LandlordPaymentViewModel mViewModel;
-
+    private FragmentLandlordPaymentBinding binding;
+    PaymentModel userPayment;
+    TextView text;
+    FirebaseFirestore db;
+    EditText ed1;
+    int addAmount;
     public static LandlordPaymentFragment newInstance() {
         return new LandlordPaymentFragment();
     }
@@ -26,8 +52,75 @@ public class LandlordPaymentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState
     ) {
-        return inflater.inflate(R.layout.fragment_landlord_payment, container, false);
+        binding = FragmentLandlordPaymentBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        addAmount =0;
+        db = FirebaseFirestore.getInstance();
+        Spinner spinner = binding.spinner3;
+        ArrayList<PaymentModel> list = new ArrayList<>();
+        text = binding.textView7;
+        ed1 = binding.editTextTextPersonName;
+        Button button = binding.button2;
+        db.collection("payments").whereEqualTo("tenantID", LoginRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(new PaymentModel(Integer.parseInt((String) document.get("amount")),(String) document.get("name"),(String) document.get("tenantID"),(String) document.get("userID"), document.getId()));
+                    }
+                    ArrayAdapter<PaymentModel> adapter = new ArrayAdapter<PaymentModel>(getActivity(), android.R.layout.simple_spinner_dropdown_item,list);
+                    spinner.setAdapter(adapter);
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view,
+                                                   int position, long id) {
+                            userPayment = adapter.getItem(position);
+                            text.setText(String.valueOf(userPayment.getAmount()));
+                            button.setOnClickListener(this::save);
+                        }
+
+                        private void save(View view) {
+                            if(isParsable(ed1.getText().toString())){
+                                addAmount = Integer.parseInt(ed1.getText().toString());
+                            }
+                            int total = addAmount+ userPayment.amount;
+                            db.collection("payments").document(userPayment.paymentID).update("amount",String.valueOf(total)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    System.out.println("Suceess");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    System.out.println(e.getMessage());
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapter) {  }
+                    });
+
+                } else {
+                    System.out.println("Error");
+                }
+            }
+        });
+
+
+        return root;
     }
+    public static boolean isParsable(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (final NumberFormatException e) {
+            return false;
+        }
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
