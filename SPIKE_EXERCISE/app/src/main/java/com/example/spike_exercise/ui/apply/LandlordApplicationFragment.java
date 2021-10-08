@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.example.spike_exercise.databinding.FragmentLandlordApplicationBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
+import com.google.firebase.firestore.DocumentReference;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -34,7 +34,7 @@ public class LandlordApplicationFragment extends Fragment {
         TextView addressName = binding.LandlordAddress;
         Button submit = binding.AcceptApplication;
         Button next = binding.NextApplicant;
-
+        Button deny = binding.DenyButton;
         db = FirebaseFirestore.getInstance();
         ArrayList<Application> list = new ArrayList<>();
         db.collection("application").get().addOnCompleteListener(task -> {
@@ -55,8 +55,18 @@ public class LandlordApplicationFragment extends Fragment {
         submit.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    document.get("userID");//REmove
-//Task<DocumentReference> signupTask = db.collection("application").child("name")
+                    DocumentReference docref = db.collection("application").document(document.getId());
+                    docref.delete();
+                }
+            } else {
+                System.out.println("Error");
+            }
+        }));
+        deny.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                    DocumentReference docref = db.collection("application").document(document.getId());
+                    docref.delete();
                 }
             } else {
                 System.out.println("Error");
