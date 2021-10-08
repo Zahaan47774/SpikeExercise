@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.spike_exercise.MainActivity;
 import com.example.spike_exercise.R;
-import com.example.spike_exercise.databinding.LandlordMaintenanceFragmentBinding;
+import com.example.spike_exercise.databinding.FragmentLandlordMaintenanceBinding;
 import com.example.spike_exercise.ui.login.LoginFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class LandlordMaintenanceFragment extends Fragment implements OnCompleteListener<DocumentReference> {
 
     private LandlordMaintenanceViewModel LandlordMaintenanceViewModel;
-    private LandlordMaintenanceFragmentBinding binding;
+    private FragmentLandlordMaintenanceBinding binding;
 
     // buttons and text fields
     private TextView textView1, textView2;
@@ -55,7 +55,7 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
         LandlordMaintenanceViewModel =
                 new ViewModelProvider(this).get(LandlordMaintenanceViewModel.class);
 
-        binding = LandlordMaintenanceFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentLandlordMaintenanceBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         button1 = binding.buttonDisplayRequest;

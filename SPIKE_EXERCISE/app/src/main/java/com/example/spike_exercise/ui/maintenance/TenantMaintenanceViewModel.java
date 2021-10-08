@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class MaintenanceViewModel extends ViewModel {
+public class TenantMaintenanceViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public MaintenanceViewModel() {
+    public TenantMaintenanceViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is the maintenance requests fragment.");
     }

@@ -1,6 +1,5 @@
 package com.example.spike_exercise.ui.signup;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.os.Handler;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,21 +18,12 @@ import android.widget.TextView;
 
 import com.example.spike_exercise.R;
 import com.example.spike_exercise.data.AccountType;
-import com.example.spike_exercise.databinding.FragmentMaintenanceBinding;
 import com.example.spike_exercise.databinding.FragmentSignupBinding;
-import com.example.spike_exercise.ui.payment.PaymentViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignupFragment extends Fragment implements OnCompleteListener<Void> {
 

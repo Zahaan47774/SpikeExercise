@@ -13,28 +13,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
-import com.example.spike_exercise.R;
-import com.example.spike_exercise.databinding.FragmentPaymentBinding;
+import com.example.spike_exercise.databinding.FragmentTenantPaymentBinding;
 
-public class PaymentFragment extends Fragment{
+public class TenantPaymentFragment extends Fragment{
 
-    private PaymentViewModel       paymentViewModel;
-    private FragmentPaymentBinding binding;
+    private TenantPaymentViewModel tenantPaymentViewModel;
+    private FragmentTenantPaymentBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState
     ) {
-        paymentViewModel =
-                new ViewModelProvider(this).get(PaymentViewModel.class);
+        tenantPaymentViewModel =
+                new ViewModelProvider(this).get(TenantPaymentViewModel.class);
 
-        binding = FragmentPaymentBinding.inflate(inflater, container, false);
+        binding = FragmentTenantPaymentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textDashboard;
 
-        paymentViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        tenantPaymentViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

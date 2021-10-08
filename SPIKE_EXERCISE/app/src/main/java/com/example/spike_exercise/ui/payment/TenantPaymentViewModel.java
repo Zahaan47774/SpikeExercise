@@ -1,16 +1,19 @@
-package com.example.spike_exercise.ui.apply;
+package com.example.spike_exercise.ui.payment;
+
+import android.widget.Button;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ApplyViewModel extends ViewModel {
+public class TenantPaymentViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
+    private Button addFee;
 
-    public ApplyViewModel() {
+    public TenantPaymentViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is the rental application fragment.");
+
     }
 
     public LiveData<String> getText() {

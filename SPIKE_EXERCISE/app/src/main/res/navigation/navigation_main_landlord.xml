@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_payment"
-        android:name="com.example.spike_exercise.ui.payment.PaymentFragment"
+        android:name="com.example.spike_exercise.ui.payment.LandlordPaymentFragment"
         android:label="@string/title_payment"
-        tools:layout="@layout/fragment_payment" />
+        tools:layout="@layout/fragment_tenant_payment" />
 
     <fragment
         android:id="@+id/navigation_maintenance"
         android:name="com.example.spike_exercise.ui.maintenance.LandlordMaintenanceFragment"
         android:label="Maintenance Landlord"
-        tools:layout="@layout/landlord_maintenance_fragment" />
+        tools:layout="@layout/fragment_landlord_maintenance" />
 
     <fragment
         android:id="@+id/navigation_apply"
-        android:name="com.example.spike_exercise.ui.apply.ApplyFragment"
+        android:name="com.example.spike_exercise.ui.apply.LandlordApplyFragment"
         android:label="@string/title_apply"
-        tools:layout="@layout/fragment_apply" />
+        tools:layout="@layout/fragment_tenant_apply" />
 </navigation>

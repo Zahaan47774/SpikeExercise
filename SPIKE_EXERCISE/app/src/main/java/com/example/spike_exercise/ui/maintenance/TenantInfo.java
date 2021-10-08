@@ -1,8 +1,8 @@
 package com.example.spike_exercise.ui.maintenance;
 
-public class tenantInfo {
+public class TenantInfo {
     public String tenantID,companyName;
-    public tenantInfo(String tenantID,String companyName){
+    public TenantInfo(String tenantID, String companyName){
         this.tenantID = tenantID;
         this.companyName = companyName;
     }

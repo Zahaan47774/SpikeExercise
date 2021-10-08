@@ -35,9 +35,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavGraph navGraph = null;
         UserAccount user = LoginRepository.getInstance().getCurrentUser();
+        // Change navigation layout depending on whether a tenant or landlord is signed in
         switch(user.getAccountType()) {
             case TENANT:
-                navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
+                navGraph = navController.getNavInflater().inflate(R.navigation.navigation_main_tenant);
                 break;
             case LANDLORD:
                 navGraph = navController.getNavInflater().inflate(R.navigation.navigation_main_landlord);

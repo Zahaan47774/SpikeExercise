@@ -9,39 +9,32 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
-import com.example.spike_exercise.R;
 import com.example.spike_exercise.data.LoginRepository;
-import com.example.spike_exercise.databinding.FragmentApplyBinding;
+import com.example.spike_exercise.databinding.FragmentTenantApplyBinding;
 import com.example.spike_exercise.ui.login.LoginViewModel;
 import com.example.spike_exercise.ui.login.LoginViewModelFactory;
-import com.example.spike_exercise.ui.maintenance.MaintenanceFragment;
-import com.example.spike_exercise.ui.maintenance.tenantInfo;
+import com.example.spike_exercise.ui.maintenance.TenantInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class ApplyFragment extends Fragment {
+public class TenantApplyFragment extends Fragment {
 
-    private ApplyViewModel       applyViewModel;
+    private TenantApplyViewModel tenantApplyViewModel;
     private LoginViewModel       loginViewModel;
-    private FragmentApplyBinding binding;
+    private FragmentTenantApplyBinding binding;
     FirebaseFirestore db;
     FirebaseAuth auth;
     String userID;
@@ -51,14 +44,14 @@ public class ApplyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState
     ) {
-        applyViewModel =
-                new ViewModelProvider(this).get(ApplyViewModel.class);
+        tenantApplyViewModel =
+                new ViewModelProvider(this).get(TenantApplyViewModel.class);
 
-        binding = FragmentApplyBinding.inflate(inflater, container, false);
+        binding = FragmentTenantApplyBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         /*
         final TextView textView = binding.textNotifications;
-        applyViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        tenantApplyViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
@@ -85,23 +78,23 @@ public class ApplyFragment extends Fragment {
 
         final Button submit_button = binding.submitButton;
 
-        ArrayList<tenantInfo> list = new ArrayList<>();
+        ArrayList<TenantInfo> list = new ArrayList<>();
         db.collection("users").whereEqualTo("accountType",1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(new tenantInfo(document.getId(),(String) document.get("companyName")));
+                        list.add(new TenantInfo(document.getId(),(String) document.get("companyName")));
                     }
-                    ArrayAdapter<tenantInfo> adapter = new ArrayAdapter<tenantInfo>(getActivity(), android.R.layout.simple_spinner_dropdown_item,list);
+                    ArrayAdapter<TenantInfo> adapter = new ArrayAdapter<TenantInfo>(getActivity(), android.R.layout.simple_spinner_dropdown_item,list);
                     spinner.setAdapter(adapter);
                     spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                         @Override
                         public void onItemSelected(AdapterView<?> adapterView, View view,
                                                    int position, long id) {
-                            tenantInfo tenant = adapter.getItem(position);
+                            TenantInfo tenant = adapter.getItem(position);
                             company = tenant.getTenantID();
                         }
                         @Override
@@ -122,7 +115,7 @@ public class ApplyFragment extends Fragment {
                         company);
 
                 Task<DocumentReference> signupTask = db.collection("application").add(newApplication);
-                //signupTask.addOnCompleteListener(ApplyFragment.this);
+                //signupTask.addOnCompleteListener(TenantApplyFragment.this);
 
             }
         });
