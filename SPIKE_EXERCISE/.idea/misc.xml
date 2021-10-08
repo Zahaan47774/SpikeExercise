@@ -19,6 +19,7 @@
         <entry key="app/src/main/res/layout/activity_account.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/fragment_apply.xml" value="0.19519927536231885" />
+        <entry key="app/src/main/res/layout/fragment_landlord_payment.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/fragment_maintenance.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.19519927536231885" />

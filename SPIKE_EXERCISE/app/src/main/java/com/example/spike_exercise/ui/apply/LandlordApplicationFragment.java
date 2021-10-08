@@ -55,7 +55,7 @@ public class LandlordApplicationFragment extends Fragment {
         submit.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    document.get("userID");//REmove
+                    document.get("userID");//Remove
 //Task<DocumentReference> signupTask = db.collection("application").child("name")
                 }
             } else {
