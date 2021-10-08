@@ -44,7 +44,7 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
     private EditText editText1;
     private String userID;
     private Button button1, button2;
-
+    private int index;
     FirebaseFirestore db;
     FirebaseAuth auth;
 
@@ -97,7 +97,7 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
             textView2.setText("Error Ocurred");
         }
 
-        int index = 0;
+
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,12 +131,6 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    public void save(View v){
-        Request request = new Request(userID,company,ed3.getText().toString());
-        Task<DocumentReference> signupTask = db.collection("maintananence").add(request);
-        signupTask.addOnCompleteListener(MaintenanceFragment.this);
     }
 
     private void navigateToMaintenanceActivity() {

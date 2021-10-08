@@ -14,14 +14,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.spike_exercise.R;
-import com.example.spike_exercise.databinding.FragmentApplyBinding;
 import com.example.spike_exercise.databinding.FragmentLandlordApplicationBinding;
-import com.example.spike_exercise.databinding.LandlordMaintenanceFragmentBinding;
 import com.example.spike_exercise.ui.login.LoginViewModel;
 import com.example.spike_exercise.ui.login.LoginViewModelFactory;
 import com.example.spike_exercise.ui.maintenance.LandlordMaintenanceViewModel;
 import com.example.spike_exercise.ui.maintenance.Request;
-import com.example.spike_exercise.ui.maintenance.tenantInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
