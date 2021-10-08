@@ -1,5 +1,5 @@
 package com.example.spike_exercise.ui.apply;
-
+/**
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -115,3 +115,4 @@ public class LandlordApplicationFragment extends Fragment {
         return root;
     }
 }
+*/
