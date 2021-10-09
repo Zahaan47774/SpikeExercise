@@ -23,6 +23,8 @@ import com.example.spike_exercise.R;
 import com.example.spike_exercise.databinding.FragmentLandlordMaintenanceBinding;
 import com.example.spike_exercise.ui.login.LoginFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,11 +42,11 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
     private FragmentLandlordMaintenanceBinding binding;
 
     // buttons and text fields
-    private TextView textView1, textView2;
+    private TextView textView1, textView2, textView10, textView11, textView6, textView12;
     private EditText editText1;
     private String userID;
     private Button button1, button2;
-    private int index;
+    private int index; // keeps track of what request is being shown
     FirebaseFirestore db;
     FirebaseAuth auth;
 
@@ -60,12 +62,15 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
         button2 = binding.buttonSendMessage;
         textView1 = binding.textViewDisplayUser;
         textView2 = binding.textViewRequest;
+        textView6 = binding.textViewPriority;
+        textView10 = binding.textView10; // "Tenant ID: "
+        textView11 = binding.textView11; // "Priority: "
+        textView12 = binding.textView12; // "Request: "
         editText1 = binding.editTextSendMessage;
-
         db = FirebaseFirestore.getInstance();
-        // retrieves collection of requests
+
+        // collection of requests
         ArrayList<Request> list = new ArrayList<>();
-        // collects requests in list
 
         /*
         db.collection("mainanantence").get().then(function(querySnapshot)) {
@@ -74,7 +79,7 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
             });
         });
         */
-
+        index = 0;
         db.collection("maintananence").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -82,47 +87,61 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         list.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request")));
                     }
+                    //check if list is empty
+                    if (list.isEmpty()) {
+                        textView1.setText("");
+                        textView2.setText("No maintenance requests");
+                    } else {
+                        //textView1.setText("");
+                        textView2.setText("Click above to display requests");
+                    }
+                    // displays new request on click
+                    button1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // display user id within textview1
+                            if (index == list.size()) {
+                                index = 0;
+                            }
+                            textView1.setText(list.get(index).getTenantID());
+                            // display maintenance request within textview2
+                            textView2.setText(list.get(index).getRequest());
+                            if (list.get(index).isPriority()) {
+                                textView6.setText("High");
+                            } else {
+                                textView6.setText("Low");
+                            }
+                            index++;
+                        }
+                    });
+                    // sends response message on click
+                    button2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // update requests with landlord response
+                            list.get(index).setResponse(editText1.getText().toString());
+                            save(view);
+                        }
+
+                        private void save(View view) {
+                            db.collection("maintananence").document(list.get(index).tenantID).update("response", editText1.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    System.out.println("Suceess");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    System.out.println(e.getMessage());
+                                }
+                            });
+                        }
+                    });
                 } else {
                     System.out.println("Error");
                 }
             }
         });
-
-        //check if list is empty
-        if (list.isEmpty()) {
-            textView1.setText("");
-            textView2.setText("No Maintenance requests"); //test later
-        } else {
-            textView1.setText("Error Ocurred");
-            textView2.setText("Error Ocurred");
-        }
-
-
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // display user id within textview1
-                if (index == list.size()) {
-                    index = 0;
-                }
-                textView1.setText(list.get(index).getTenantID());
-                // display maintenance request within textview2
-                textView2.setText(list.get(index).getRequest());
-                index++;
-            }
-        });
-        // sends message to user
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // update requests with landlord response
-                list.get(index).setResponse(editText1.getText().toString());
-
-            }
-        });
-
-        //db.collection("maintananence").
-        // still need to update firebase
 
         return root;
     }

@@ -22,48 +22,93 @@
 
     <TextView
         android:id="@+id/textViewRequest"
-        android:layout_width="212dp"
-        android:layout_height="266dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="100dp"
-        android:text="Request details"
+        android:layout_width="216dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="60dp"
         android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDisplayUser" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewPriority" />
 
     <EditText
         android:id="@+id/editTextSendMessage"
         android:layout_width="212dp"
         android:layout_height="56dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="100dp"
+        android:layout_marginTop="424dp"
         android:ems="10"
         android:gravity="start|top"
         android:hint="Send a Message Back"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewRequest" />
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonSendMessage"
-        android:layout_width="102dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="152dp"
+        android:layout_width="116dp"
+        android:layout_height="56dp"
         android:layout_marginBottom="44dp"
         android:text="Send"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSendMessage"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.151" />
 
     <TextView
         android:id="@+id/textViewDisplayUser"
-        android:layout_width="212dp"
-        android:layout_height="59dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="100dp"
-        android:text="Tenant ID"
+        android:layout_width="219dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="136dp"
+        android:layout_marginEnd="56dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonDisplayRequest" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewPriority"
+        android:layout_width="216dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDisplayUser" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="136dp"
+        android:layout_marginEnd="28dp"
+        android:text="Tenant ID:"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDisplayUser"
+        app:layout_constraintHorizontal_bias="0.853"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="56dp"
+        android:text="Priority: "
+        app:layout_constraintEnd_toStartOf="@+id/textViewPriority"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="60dp"
+        android:text="Request:"
+        app:layout_constraintEnd_toStartOf="@+id/textViewRequest"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
