@@ -34,27 +34,26 @@
         android:id="@+id/editTextSendMessage"
         android:layout_width="212dp"
         android:layout_height="56dp"
-        android:layout_marginTop="424dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:gravity="start|top"
         android:hint="Send a Message Back"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonSendMessage" />
 
     <Button
         android:id="@+id/buttonSendMessage"
-        android:layout_width="116dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="44dp"
+        android:layout_width="108dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="412dp"
         android:text="Send"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSendMessage"
-        app:layout_constraintVertical_bias="0.151" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewDisplayUser"

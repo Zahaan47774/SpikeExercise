@@ -49,6 +49,7 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
     private int index; // keeps track of what request is being shown
     FirebaseFirestore db;
     FirebaseAuth auth;
+    Request maintenanceRequest;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,13 +73,6 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
         // collection of requests
         ArrayList<Request> list = new ArrayList<>();
 
-        /*
-        db.collection("mainanantence").get().then(function(querySnapshot)) {
-            querySnapshot.forEach(function(doc)) {
-                list.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request")));
-            });
-        });
-        */
         index = 0;
         db.collection("maintananence").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -119,12 +113,16 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
                         @Override
                         public void onClick(View view) {
                             // update requests with landlord response
+                            // list.get(index).setResponse(editText1.getText().toString());
                             list.get(index).setResponse(editText1.getText().toString());
-                            save(view);
-                        }
+                            db.collection("maintananence").document(maintenanceRequest.getUserID()).update("response", editText1.getText().toString());
+                            editText1.setText(null);
+                        // save(view);
 
+                        }
+/*
                         private void save(View view) {
-                            db.collection("maintananence").document(list.get(index).tenantID).update("response", editText1.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            db.collection("maintananence").document(list.get(index).toString()).update("response", editText1.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     System.out.println("Suceess");
@@ -136,6 +134,7 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
                                 }
                             });
                         }
+ */
                     });
                 } else {
                     System.out.println("Error");
