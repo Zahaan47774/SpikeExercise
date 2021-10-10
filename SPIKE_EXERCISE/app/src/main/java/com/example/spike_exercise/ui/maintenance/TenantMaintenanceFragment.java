@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,6 +35,7 @@ public class TenantMaintenanceFragment extends Fragment implements OnCompleteLis
     FirebaseAuth auth;
     String userID;
     String company;
+    boolean priority;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         TenantMaintenanceViewModel tenantMaintenanceViewModel = new ViewModelProvider(this).get(TenantMaintenanceViewModel.class);
@@ -43,6 +45,8 @@ public class TenantMaintenanceFragment extends Fragment implements OnCompleteLis
         Button button = binding.button;
          ed3 = binding.editTextTextPersonName2;
          Spinner spinner = binding.spinner;
+         Switch switch1 = binding.switch1;
+
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
          userID = LoginRepository.getInstance().getCurrentUser().getUid();
@@ -64,6 +68,7 @@ public class TenantMaintenanceFragment extends Fragment implements OnCompleteLis
                                                    int position, long id) {
                             TenantInfo tenant = adapter.getItem(position);
                             company = tenant.getTenantID();
+                            priority = switch1.isChecked();
                         }
                         @Override
                         public void onNothingSelected(AdapterView<?> adapter) {  }
@@ -85,7 +90,7 @@ public class TenantMaintenanceFragment extends Fragment implements OnCompleteLis
         binding = null;
     }
     public void save(View v){
-        Request request = new Request(userID,company,ed3.getText().toString());
+        Request request = new Request(userID,company,ed3.getText().toString(),priority);
         Task<DocumentReference> signupTask = db.collection("maintananence").add(request);
         signupTask.addOnCompleteListener(TenantMaintenanceFragment.this);
     }

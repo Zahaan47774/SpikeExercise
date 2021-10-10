@@ -4,11 +4,12 @@ public class Request {
     public String userID,tenantID;
     public String request,response;
     public boolean priority;
-    public Request(String userID,String tenantID,String request){
+    public Request(String userID,String tenantID,String request,boolean priority){
         this.userID = userID;
         this.tenantID = tenantID;
         this.request = request;
         this.response = "";
+        this.priority = priority;
     }
     public Request(){
 
