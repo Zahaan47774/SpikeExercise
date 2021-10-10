@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_apply"
-        android:name="com.example.spike_exercise.ui.apply.LandlordApplyFragment"
+        android:name="com.example.spike_exercise.ui.apply.LandlordApplicationFragment"
         android:label="@string/title_apply"
-        tools:layout="@layout/fragment_tenant_apply" />
+        tools:layout="@layout/fragment_landlord_application" />
 </navigation>

@@ -6,72 +6,94 @@
     android:layout_height="match_parent"
     tools:context=".ui.apply.TenantApplyFragment">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <EditText
+        android:id="@+id/application_name"
+        android:layout_width="239dp"
+        android:layout_height="72dp"
+        android:ems="10"
+        android:hint="Full Name"
+        android:inputType="textPersonName"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.591" />
 
-    </TableRow>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="264dp"
+        android:layout_height="62dp"
+        android:text="Application"
+        android:textAlignment="center"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.158" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <EditText
+        android:id="@+id/application_apply_address"
+        android:layout_width="279dp"
+        android:layout_height="109dp"
+        android:ems="10"
+        android:hint="Please enter the address you are applying to"
+        android:inputType="textPostalAddress"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.428" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="94dp"
-            android:layout_marginTop="10dp"
-            android:text="Application"
-            android:textAlignment="center"
-            android:textSize="34sp"
-            android:textStyle="bold" />
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="183dp"
+        android:layout_height="115dp"
+        android:src="@drawable/madrentals_logo_only"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Please Select the Landlord Company"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteY="410dp" />
 
-        <EditText
-            android:id="@+id/application_name"
-            android:layout_width="315dp"
-            android:layout_height="38dp"
-            android:layout_margin="10dp"
-            android:ems="10"
-            android:hint="Full Name"
-            android:inputType="textPersonName"
-            android:textSize="16sp" />
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="182dp"
+        android:layout_height="77dp"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.832" />
 
-        <EditText
-            android:id="@+id/application_apply_address"
-            android:layout_width="324dp"
-            android:layout_height="37dp"
-            android:layout_margin="10dp"
-            android:ems="10"
-            android:hint="Please enter the address you are applying to"
-            android:inputType="textPostalAddress"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="Please Select the Landlord Company"
-            android:textSize="20sp" />
-
-        <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp" />
-
-        <Button
-            android:id="@+id/submit_button"
-            android:layout_width="395dp"
-            android:layout_height="87dp"
-            android:layout_marginTop="30dp"
-            android:text="Submit" />
-
-    </LinearLayout>
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="254dp"
+        android:layout_height="69dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.279" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
