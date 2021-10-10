@@ -1,5 +1,7 @@
 package com.example.spike_exercise.ui.login;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
@@ -8,7 +10,13 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -38,13 +46,15 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+
 public class LoginFragment extends Fragment implements LoginRepository.AuthListener {
 
     private LoginViewModel       loginViewModel;
     private FragmentLoginBinding binding;
 
-    private Button loginButton;
-    private TextInputLayout emailInput, passwordInput;
+    private CircularProgressButton loginButton;
+    private TextInputLayout        emailInput, passwordInput;
     private CircularProgressIndicator loginProgressIndicator;
 
     @Nullable
@@ -78,6 +88,7 @@ public class LoginFragment extends Fragment implements LoginRepository.AuthListe
             @Override
             public void onClick(View view) {
                 if(validateTextInputs()) {
+                    loginButton.startAnimation();
                     loginViewModel.setBusyStatus(true);
                     loginViewModel.login(emailInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString(), LoginFragment.this);
                 }
@@ -88,13 +99,13 @@ public class LoginFragment extends Fragment implements LoginRepository.AuthListe
             @Override
             public void onChanged(Boolean busy) {
                 if(busy) {
-                    loginButton.setText("");
-                    loginButton.setEnabled(false);
-                    loginProgressIndicator.setVisibility(View.VISIBLE);
+                    //loginButton.setText("");
+                    //loginButton.setEnabled(false);
+                    //loginProgressIndicator.setVisibility(View.VISIBLE);
                 } else {
-                    loginButton.setText("LOG IN");
-                    loginButton.setEnabled(true);
-                    loginProgressIndicator.setVisibility(View.GONE);
+                    //loginButton.setText("LOG IN");
+                    //loginButton.setEnabled(true);
+                    //loginProgressIndicator.setVisibility(View.GONE);
                 }
             }
         });
@@ -136,12 +147,20 @@ public class LoginFragment extends Fragment implements LoginRepository.AuthListe
 
     @Override
     public void onSuccess(UserAccount user) {
-        loginViewModel.setBusyStatus(false);
-        navigateToMainActivity();
+        loginButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                //loginButton.revertAnimation();
+                navigateToMainActivity();
+            }
+        };
+        new Handler().postDelayed(runnable, 500);
     }
 
     @Override
     public void onFailure(Exception e) {
+        loginButton.revertAnimation();
         loginViewModel.setBusyStatus(false);
         String errorMessage = e.getMessage().toLowerCase();
         if(errorMessage.contains("email") || errorMessage.contains("password") || errorMessage.contains("no user")) {
@@ -149,5 +168,21 @@ public class LoginFragment extends Fragment implements LoginRepository.AuthListe
         } else {
             passwordInput.setError(e.getMessage());
         }
+    }
+
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId, int tintColor) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+        drawable.setTint(context.getResources().getColor(tintColor));
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 }

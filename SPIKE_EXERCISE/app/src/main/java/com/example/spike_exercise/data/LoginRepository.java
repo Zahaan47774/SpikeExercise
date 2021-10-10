@@ -97,8 +97,16 @@ public class LoginRepository implements EventListener<DocumentSnapshot> {
             AuthResult authResult = authTask.getResult();
             DocumentSnapshot userData = task.getResult();
             if(userData != null && authResult != null) {
-                currentUser = parseUserFromFirebase(authResult, userData);
-                if(authListener != null) authListener.onSuccess(currentUser);
+                try {
+                    currentUser = parseUserFromFirebase(authResult, userData);
+                    Float balance = userData.get(DatabaseKeys.FIELD_USERS_BALANCE, Float.class);
+                    if(balance == null) throw new IllegalStateException("User account balance invalid!");
+                    this.balance.postValue(balance);
+                    if(authListener != null) authListener.onSuccess(currentUser);
+                } catch (Exception e) {
+                    if(authListener != null) authListener.onFailure(e);
+                }
+
             } else {
                 if(authListener != null) authListener.onFailure(new IllegalStateException("Failed to retrieve user data! Please try again later."));
             }
