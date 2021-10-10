@@ -17,5 +17,6 @@ public class DatabaseKeys {
     public static final String FIELD_USERS_FIRST_NAME = "firstName";
     public static final String FIELD_USERS_LAST_NAME = "lastName";
     public static final String FIELD_USERS_PROP_MGR = "companyName";
+    public static final String FIELD_USERS_LANDLORD_ID = "landlordID";
     public static final String FIELD_USERS_BALANCE = "balance";
 }
