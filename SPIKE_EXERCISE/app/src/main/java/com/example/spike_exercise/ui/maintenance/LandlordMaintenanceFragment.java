@@ -79,7 +79,7 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request")));
+                        list.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request"),(boolean) document.get("priority")));
                     }
                     //check if list is empty
                     if (list.isEmpty()) {
