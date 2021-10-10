@@ -55,7 +55,7 @@ public class LandlordApplicationFragment extends Fragment {
         submit.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    document.get("userID");//Remove
+                    String applicantID = (String)document.get("UserId");//Remove
                     DocumentReference docref = db.collection("application").document(document.getId());
                     docref.delete();
                 }
@@ -73,8 +73,10 @@ public class LandlordApplicationFragment extends Fragment {
                 System.out.println("Error");
             }
         }));
+
         for (int i = 0; i < list.size(); i++) {
             int finalI = i;
+            //if(list.get(finalI).getCompany()=);
             next.setOnClickListener(view -> {
                 applyName.setText(list.get(finalI).getName());
                 UserID = list.get(finalI).getUserID();
