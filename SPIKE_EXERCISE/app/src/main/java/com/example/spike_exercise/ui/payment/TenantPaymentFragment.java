@@ -107,42 +107,6 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
             }
         });
 
-
-        /*db.collection("payments").whereEqualTo("tenantID", LoginRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(new PaymentModel(Integer.parseInt((String) document.get("amount")), (String) document.get("name"), (String) document.get("tenantID"), (String) document.get("userID"), document.getId()));
-                    }
-                }
-
-                pay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int balance = Integer.parseInt(payView.getText().toString()) - Integer.parseInt(payAmount.getEditText().getText().toString());
-                        payView.setText("" + balance);
-                        Map<String, Object> paymentData = new HashMap<>();
-                        paymentData.put("amount", balance);
-                        db.collection("payments").document(userID).set(paymentData).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                payAmount.getEditText().getText().clear();
-                                System.out.println("Success");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                System.out.println(e.getMessage());
-                            }
-                        });
-                    }
-                });
-
-            }
-        });*/
-
-
         return root;
     }
 
@@ -162,9 +126,18 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
         binding = null;
     }
 
+    private void clearAllFields() {
+        binding.paymentAmountInput.getEditText().setText("");
+        binding.paymentBankAccountInput.getEditText().setText("");
+        binding.paymentBankNameInput.getEditText().setText("");
+        binding.paymentBankRoutingInput.getEditText().setText("");
+        binding.paymentBankTypeInput.getEditText().setText("");
+    }
+
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if(task.isSuccessful()) {
+            clearAllFields();
             payButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), AccountActivity.getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
             Runnable runnable = new Runnable() {
                 @Override
@@ -172,7 +145,7 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
                     payButton.revertAnimation();
                 }
             };
-            new Handler().postDelayed(runnable, 1000);
+            new Handler().postDelayed(runnable, 2000);
         } else {
             payButton.revertAnimation();
         }
