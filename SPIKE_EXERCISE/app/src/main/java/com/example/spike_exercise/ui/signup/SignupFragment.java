@@ -13,12 +13,16 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.spike_exercise.R;
 import com.example.spike_exercise.data.AccountType;
+import com.example.spike_exercise.data.DatabaseKeys;
 import com.example.spike_exercise.databinding.FragmentSignupBinding;
+import com.example.spike_exercise.ui.TextInputValidator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -27,16 +31,13 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class SignupFragment extends Fragment implements OnCompleteListener<Void> {
 
+    private static final String LOCAL_FIELD_USERS_COMP_NAME = "localCompanyName";
+    private static final String LOCAL_FIELD_USERS_EMAIL = "localEmail";
+
     private SignupViewModel mViewModel;
     private FragmentSignupBinding binding;
 
-    private static final String FIELD_FIRST_NAME   = "field_first_name";
-    private static final String FIELD_LAST_NAME    = "field_last_name";
-    private static final String FIELD_COMPANY_NAME = "field_company_name";
-    private static final String FIELD_EMAIL        = "field_email";
-    private static final String FIELD_PASSWORD     = "field_password";
-
-    private TextInputLayout firstNameInput, lastNameInput, companyNameInput, emailInput, passwordInput;
+    private TextInputLayout firstNameInput, lastNameInput, propertyMgrInput, companyNameInput, emailInput, passwordInput;
     private TextView passwordReqText;
     private Button signupButton, signupSuccessButton;
     private CircularProgressIndicator signupProgressIndicator;
@@ -55,6 +56,7 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
 
         firstNameInput          = binding.signupFirstNameInput;
         lastNameInput           = binding.signupLastNameInput;
+        propertyMgrInput        = binding.signupPropertyMgrInput;
         companyNameInput        = binding.signupCompanyNameInput;
         emailInput              = binding.signupEmailAddressInput;
         passwordInput           = binding.signupPasswordInput;
@@ -66,15 +68,18 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
 
         // Load saved text input states on resuming from a configuration change
         if(savedInstanceState != null) {
-            firstNameInput.getEditText().setText(savedInstanceState.getString(FIELD_FIRST_NAME));
-            lastNameInput.getEditText().setText(savedInstanceState.getString(FIELD_LAST_NAME));
-            companyNameInput.getEditText().setText(savedInstanceState.getString(FIELD_COMPANY_NAME));
-            emailInput.getEditText().setText(savedInstanceState.getString(FIELD_EMAIL));
+            firstNameInput.getEditText().setText(savedInstanceState.getString(DatabaseKeys.FIELD_USERS_FIRST_NAME));
+            lastNameInput.getEditText().setText(savedInstanceState.getString(DatabaseKeys.FIELD_USERS_LAST_NAME));
+            propertyMgrInput.getEditText().setText(savedInstanceState.getString(DatabaseKeys.FIELD_USERS_PROP_MGR));
+            companyNameInput.getEditText().setText(savedInstanceState.getString(LOCAL_FIELD_USERS_COMP_NAME));
+            emailInput.getEditText().setText(savedInstanceState.getString(LOCAL_FIELD_USERS_EMAIL));
             //passwordInput.getEditText().setText(savedInstanceState.getString(FIELD_PASSWORD));
         }
 
+        ((AutoCompleteTextView)propertyMgrInput.getEditText()).setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, new String[] {"None"}));
 
-        // Set up dynamic UI that changes when the toggle button is switched between the "Tenant" and "Landlord" items
+
+        // Set up dynamic UI that changes when the toggle button is switched between the "Tenant" and "LandlordAccount" items
         MaterialButtonToggleGroup accountTypeButtonGroup = binding.signupAccountTypeButtonGroup;
 
         // Set initial selected item
@@ -99,6 +104,7 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
                 mViewModel.createUser(
                         firstNameInput.getEditText().getText().toString(),
                         lastNameInput.getEditText().getText().toString(),
+                        propertyMgrInput.getEditText().getText().toString(),
                         companyNameInput.getEditText().getText().toString(),
                         emailInput.getEditText().getText().toString(),
                         passwordInput.getEditText().getText().toString(),
@@ -123,36 +129,13 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
     }
 
     private boolean validateTextInputs() {
-        if(emailInput == null || passwordInput == null) return false;
-        boolean isEmailValid = mViewModel.validateEmailField(emailInput.getEditText().getText().toString());
-        boolean isPasswordValid = mViewModel.validatePasswordField(passwordInput.getEditText().getText().toString());
-        boolean isFirstNameValid = mViewModel.validateRequiredField(firstNameInput.getEditText().getText().toString());
-        boolean isLastNameValid = mViewModel.validateRequiredField(lastNameInput.getEditText().getText().toString());
+        boolean isEmailValid = TextInputValidator.validateEmailField(emailInput);
+        boolean isPasswordValid = TextInputValidator.validatePasswordField(passwordInput, true);
+        boolean isFirstNameValid = TextInputValidator.validateRequiredField(firstNameInput);
+        boolean isLastNameValid = TextInputValidator.validateRequiredField(lastNameInput);
+        boolean isPropertyMgrValid = propertyMgrInput.getVisibility() == View.GONE || TextInputValidator.validateRequiredField(propertyMgrInput);
 
-        if(!isEmailValid) {
-            emailInput.setError("Invalid email address");
-        } else {
-            emailInput.setErrorEnabled(false);
-        }
-        if(!isPasswordValid) {
-            passwordInput.setError("Password must be at least 8 characters long");
-            passwordReqText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-        } else {
-            passwordInput.setErrorEnabled(false);
-            passwordReqText.setTextColor(getResources().getColor(android.R.color.black));
-        }
-        if(!isFirstNameValid) {
-            firstNameInput.setError("Required");
-        } else {
-            firstNameInput.setErrorEnabled(false);
-        }
-        if(!isLastNameValid) {
-            lastNameInput.setError("Required");
-        } else {
-            lastNameInput.setErrorEnabled(false);
-        }
-
-        return isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid;
+        return isFirstNameValid && isLastNameValid && isPropertyMgrValid && isEmailValid && isPasswordValid;
     }
 
     private void navigateToLoginFragment(View view) {
@@ -162,10 +145,11 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(FIELD_FIRST_NAME, firstNameInput.getEditText().getText().toString());
-        outState.putString(FIELD_LAST_NAME, lastNameInput.getEditText().getText().toString());
-        outState.putString(FIELD_COMPANY_NAME, companyNameInput.getEditText().getText().toString());
-        outState.putString(FIELD_EMAIL, emailInput.getEditText().getText().toString());
+        outState.putString(DatabaseKeys.FIELD_USERS_FIRST_NAME, firstNameInput.getEditText().getText().toString());
+        outState.putString(DatabaseKeys.FIELD_USERS_LAST_NAME, lastNameInput.getEditText().getText().toString());
+        outState.putString(DatabaseKeys.FIELD_USERS_PROP_MGR, propertyMgrInput.getEditText().getText().toString());
+        outState.putString(LOCAL_FIELD_USERS_COMP_NAME, companyNameInput.getEditText().getText().toString());
+        outState.putString(LOCAL_FIELD_USERS_EMAIL, emailInput.getEditText().getText().toString());
         //outState.putString(FIELD_PASSWORD, passwordInput.getEditText().getText().toString());
     }
 

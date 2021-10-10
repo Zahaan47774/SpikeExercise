@@ -1,9 +1,12 @@
 package com.example.spike_exercise.ui.payment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,28 +17,40 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.spike_exercise.data.DatabaseKeys;
 import com.example.spike_exercise.data.LoginRepository;
+import com.example.spike_exercise.data.model.UserAccount;
 import com.example.spike_exercise.databinding.FragmentTenantPaymentBinding;
+import com.example.spike_exercise.ui.TextInputValidator;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-public class TenantPaymentFragment extends Fragment{
+public class TenantPaymentFragment extends Fragment implements OnCompleteListener<Void> {
 
     private TenantPaymentViewModel tenantPaymentViewModel;
     private FragmentTenantPaymentBinding binding;
 
     FirebaseFirestore db;
-    FirebaseAuth auth;
-    String userID;
-    ArrayList<PaymentModel> list = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState
@@ -46,24 +61,46 @@ public class TenantPaymentFragment extends Fragment{
         binding = FragmentTenantPaymentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
+        final Button pay = binding.paymentConfirmButton;
+        final TextView balanceText = binding.balance;
+        final AutoCompleteTextView accountTypeInput = (AutoCompleteTextView) binding.paymentBankTypeInput.getEditText();
+        db = FirebaseFirestore.getInstance();
 
-        tenantPaymentViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        accountTypeInput.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, new String[] {"Checking", "Savings"}));
+
+        LoginRepository.getInstance().observeCurrentUserBalance(getViewLifecycleOwner(), new Observer<Float>() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onChanged(Float balance) {
+                balanceText.setText(String.format(Locale.US, "%.2f", balance));
             }
         });
 
-        final Button pay = binding.pay;
-        final EditText payAmount = binding.payment;
-        final TextView payView = binding.balance;
-        db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
-        userID = LoginRepository.getInstance().getCurrentUser().getUid();
+        pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(validatePaymentInformation()) {
+                    UserAccount currentUser = LoginRepository.getInstance().getCurrentUser();
+                    final float amount = Float.parseFloat(binding.paymentAmountInput.getEditText().getText().toString());
+                    WriteBatch batch = db.batch();
+
+                    batch.update(db.collection(DatabaseKeys.DOC_USERS).document(currentUser.getUid()), DatabaseKeys.FIELD_USERS_BALANCE, FieldValue.increment(-amount));
+
+                    Map<String, Object> paymentData = new HashMap<>();
+                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_AMOUNT, amount);
+                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_BALANCE, 0);
+                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_NAME, currentUser.getFullName());
+                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_TIMESTAMP, new Date().getTime());
+                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_TENANT_ID, currentUser.getUid());
+                    batch.set(db.collection(DatabaseKeys.DOC_PAYMENTS).document(), paymentData);
+
+                    Task<Void> paymentTask = batch.commit();
+                    paymentTask.addOnCompleteListener(TenantPaymentFragment.this);
+                }
+            }
+        });
 
 
-        db.collection("payments").whereEqualTo("tenantID", LoginRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        /*db.collection("payments").whereEqualTo("tenantID", LoginRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -75,12 +112,14 @@ public class TenantPaymentFragment extends Fragment{
                 pay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int balance = Integer.parseInt(payView.getText().toString()) - Integer.parseInt(payAmount.getText().toString());
+                        int balance = Integer.parseInt(payView.getText().toString()) - Integer.parseInt(payAmount.getEditText().getText().toString());
                         payView.setText("" + balance);
-                        db.collection("payments").document(userID).update("amount",String.valueOf(balance)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        Map<String, Object> paymentData = new HashMap<>();
+                        paymentData.put("amount", balance);
+                        db.collection("payments").document(userID).set(paymentData).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                payAmount.getText().clear();
+                                payAmount.getEditText().getText().clear();
                                 System.out.println("Success");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -93,15 +132,34 @@ public class TenantPaymentFragment extends Fragment{
                 });
 
             }
-        });
+        });*/
 
 
         return root;
+    }
+
+    private boolean validatePaymentInformation() {
+        boolean isAmountValid = TextInputValidator.validateRequiredField(binding.paymentAmountInput);
+        boolean isAccountValid = TextInputValidator.validateRequiredField(binding.paymentBankAccountInput);
+        boolean isNameValid = TextInputValidator.validateRequiredField(binding.paymentBankNameInput);
+        boolean isRoutingValid = TextInputValidator.validateRequiredField(binding.paymentBankRoutingInput);
+        boolean isTypeValid = TextInputValidator.validateRequiredField(binding.paymentBankTypeInput);
+
+        return isAmountValid && isAccountValid && isNameValid && isRoutingValid && isTypeValid;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onComplete(@NonNull Task<Void> task) {
+        if(task.isSuccessful()) {
+
+        } else {
+
+        }
     }
 }

@@ -114,6 +114,25 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/signup_property_mgr_input"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Property Manager *"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signup_last_name_input"
+        app:layout_constraintWidth_max="400dp"
+        app:layout_constraintWidth_percent="0.8">
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/signup_company_name_input"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
@@ -121,7 +140,7 @@
         android:hint="Company Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signup_last_name_input"
+        app:layout_constraintTop_toBottomOf="@id/signup_property_mgr_input"
         app:layout_constraintWidth_max="400dp"
         app:layout_constraintWidth_percent="0.8">
 
@@ -158,6 +177,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Password *"
+        app:helperText="Must be at least 8 characters"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signup_email_address_input"

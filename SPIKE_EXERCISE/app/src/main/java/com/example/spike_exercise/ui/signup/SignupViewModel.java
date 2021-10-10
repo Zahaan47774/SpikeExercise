@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +31,14 @@ public class SignupViewModel extends ViewModel implements OnCompleteListener<Voi
 
     private final MutableLiveData<AccountType> selectedAccountType;
     private final MutableLiveData<Boolean> busyStatus;
-    private final Map<String, Object> userData;
+    private final Map<String, Object> userData, userBalance;
 
     public SignupViewModel() {
         this.firestore = FirebaseFirestore.getInstance();
         this.selectedAccountType = new MutableLiveData<>(AccountType.TENANT);
         this.busyStatus = new MutableLiveData<>(false);
         this.userData = new HashMap<>();
+        this.userBalance = new HashMap<>();
     }
 
     public void setSelectedAccountType(AccountType accountType) {
@@ -75,19 +77,27 @@ public class SignupViewModel extends ViewModel implements OnCompleteListener<Voi
         return passwordText != null && passwordText.length() >= 8;
     }
 
-    public void createUser(String firstName, String lastName, String companyName, String emailAddress, String password, OnCompleteListener<Void> onCompleteListener) {
+    public void createUser(String firstName, String lastName, String propertyMgr, String companyName, String emailAddress, String password, OnCompleteListener<Void> onCompleteListener) {
         busyStatus.setValue(true);
         userData.put("accountType", selectedAccountType.getValue().ordinal());
         userData.put("firstName", firstName);
         userData.put("lastName", lastName);
         userData.put("companyName", companyName);
+        userBalance.put("balance", 0);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         Task<AuthResult> authTask = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password);
         Task<Void> signupTask = authTask.continueWithTask(task -> {
             if(task.isSuccessful() && task.getResult() != null && task.getResult().getUser() != null) {
                 FirebaseUser newUser = task.getResult().getUser();
-                DocumentReference newUserDataDocument = firestore.collection("users").document(newUser.getUid());
-                return newUserDataDocument.set(userData);
+                WriteBatch batch = firestore.batch();
+
+                DocumentReference newUserData = firestore.collection("users").document(newUser.getUid());
+                DocumentReference newUserBalance = firestore.collection("payments").document(newUser.getUid());
+
+                batch.set(newUserData, userData);
+                batch.set(newUserBalance, userBalance);
+
+                return batch.commit();
             }
             return null;
         });
