@@ -68,11 +68,14 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
 
         // Load saved text input states on resuming from a configuration change
         if(savedInstanceState != null) {
-            firstNameInput.getEditText().setText(savedInstanceState.getString(DatabaseKeys.FIELD_USERS_FIRST_NAME));
-            lastNameInput.getEditText().setText(savedInstanceState.getString(DatabaseKeys.FIELD_USERS_LAST_NAME));
-            companyNameInput.getEditText().setText(savedInstanceState.getString(LOCAL_FIELD_USERS_COMP_NAME));
-            emailInput.getEditText().setText(savedInstanceState.getString(LOCAL_FIELD_USERS_EMAIL));
-            //passwordInput.getEditText().setText(savedInstanceState.getString(FIELD_PASSWORD));
+            String savedFirstName =   savedInstanceState.getString(DatabaseKeys.FIELD_USERS_FIRST_NAME);
+            String savedLastName =    savedInstanceState.getString(DatabaseKeys.FIELD_USERS_LAST_NAME);
+            String savedCompanyName = savedInstanceState.getString(DatabaseKeys.FIELD_USERS_PROP_MGR);
+            String savedEmail =       savedInstanceState.getString(LOCAL_FIELD_USERS_EMAIL);
+            if(savedFirstName != null)   firstNameInput.getEditText().setText(savedFirstName);
+            if(savedLastName != null)    lastNameInput.getEditText().setText(savedLastName);
+            if(savedCompanyName != null) companyNameInput.getEditText().setText(savedCompanyName);
+            if(savedEmail != null)       emailInput.getEditText().setText(savedEmail);
         }
 
         // Set up dynamic UI that changes when the toggle button is switched between the "Tenant" and "LandlordAccount" items
@@ -128,11 +131,13 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(DatabaseKeys.FIELD_USERS_FIRST_NAME, firstNameInput.getEditText().getText().toString());
-        outState.putString(DatabaseKeys.FIELD_USERS_LAST_NAME, lastNameInput.getEditText().getText().toString());
-        outState.putString(LOCAL_FIELD_USERS_COMP_NAME, companyNameInput.getEditText().getText().toString());
-        outState.putString(LOCAL_FIELD_USERS_EMAIL, emailInput.getEditText().getText().toString());
-        //outState.putString(FIELD_PASSWORD, passwordInput.getEditText().getText().toString());
+        if(firstNameInput != null && firstNameInput.getEditText() != null) {
+            outState.putString(DatabaseKeys.FIELD_USERS_FIRST_NAME, firstNameInput.getEditText().getText().toString());
+            outState.putString(DatabaseKeys.FIELD_USERS_LAST_NAME, lastNameInput.getEditText().getText().toString());
+            outState.putString(LOCAL_FIELD_USERS_COMP_NAME, companyNameInput.getEditText().getText().toString());
+            outState.putString(LOCAL_FIELD_USERS_EMAIL, emailInput.getEditText().getText().toString());
+            //outState.putString(FIELD_PASSWORD, passwordInput.getEditText().getText().toString());
+        }
     }
 
     @Override
