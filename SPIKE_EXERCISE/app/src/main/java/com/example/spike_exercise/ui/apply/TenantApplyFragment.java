@@ -1,12 +1,14 @@
 package com.example.spike_exercise.ui.apply;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -15,8 +17,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.spike_exercise.data.LoginRepository;
 import com.example.spike_exercise.databinding.FragmentTenantApplyBinding;
+import com.example.spike_exercise.ui.maintenance.Request;
 import com.example.spike_exercise.ui.maintenance.TenantInfo;
+import com.example.spike_exercise.ui.maintenance.TenantMaintenanceFragment;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -30,6 +36,8 @@ public class TenantApplyFragment extends Fragment {
     FirebaseAuth auth;
     String userID;
     String company;
+    String name;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,7 +58,8 @@ public class TenantApplyFragment extends Fragment {
         userID = LoginRepository.getInstance().getCurrentUser().getUid();
 
         final Button submit_button = binding.submitButton;
-
+        EditText address = binding.applicationApplyAddress;
+        EditText fullName = binding.applicationName;
         ArrayList<TenantInfo> list = new ArrayList<>();
         db.collection("users").whereEqualTo("accountType",1).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -77,8 +86,8 @@ public class TenantApplyFragment extends Fragment {
             }
         });
         submit_button.setOnClickListener(view12 -> {
-
-            //signupTask.addOnCompleteListener(TenantApplyFragment.this);
+            Application applicant = new Application(userID,fullName.toString(),address.toString(),company);
+            Task<DocumentReference> applyTask = db.collection("application").add(applicant);
 
         });
     }

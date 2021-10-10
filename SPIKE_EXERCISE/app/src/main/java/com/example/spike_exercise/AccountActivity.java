@@ -8,6 +8,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.spike_exercise.data.LandlordRepository;
 import com.example.spike_exercise.databinding.ActivityAccountBinding;
 import com.example.spike_exercise.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,6 +24,8 @@ public class AccountActivity extends AppCompatActivity {
 
         binding = ActivityAccountBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        LandlordRepository.init();
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
