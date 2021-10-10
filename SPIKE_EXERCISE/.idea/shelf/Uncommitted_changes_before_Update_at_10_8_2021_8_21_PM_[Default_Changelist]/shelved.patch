@@ -1,0 +1,77 @@
+Index: .idea/deploymentTargetDropDown.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"deploymentTargetDropDown\">\r\n    <targetSelectedWithDropDown>\r\n      <Target>\r\n        <type value=\"QUICK_BOOT_TARGET\" />\r\n        <deviceKey>\r\n          <Key>\r\n            <type value=\"VIRTUAL_DEVICE_PATH\" />\r\n            <value value=\"C:\\Users\\masonberres\\.android\\avd\\Pixel_3a_API_30_Play_Services.avd\" />\r\n          </Key>\r\n        </deviceKey>\r\n      </Target>\r\n    </targetSelectedWithDropDown>\r\n    <timeTargetWasSelectedWithDropDown value=\"2021-10-04T19:45:39.772279600Z\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml
+--- a/.idea/deploymentTargetDropDown.xml	(revision 67c992b1b6905caf1c285ef555ff27487d5e1548)
++++ b/.idea/deploymentTargetDropDown.xml	(date 1633707806778)
+@@ -7,11 +7,11 @@
+         <deviceKey>
+           <Key>
+             <type value="VIRTUAL_DEVICE_PATH" />
+-            <value value="C:\Users\masonberres\.android\avd\Pixel_3a_API_30_Play_Services.avd" />
++            <value value="C:\Users\masonberres\.android\avd\Pixel_3a_API_30_x86.avd" />
+           </Key>
+         </deviceKey>
+       </Target>
+     </targetSelectedWithDropDown>
+-    <timeTargetWasSelectedWithDropDown value="2021-10-04T19:45:39.772279600Z" />
++    <timeTargetWasSelectedWithDropDown value="2021-10-08T15:43:23.597647400Z" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"DesignSurface\">\r\n    <option name=\"filePathToZoomLevelMap\">\r\n      <map>\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_account.xml\" value=\"0.334375\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_login.xml\" value=\"0.2515625\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_main.xml\" value=\"0.371875\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_login.xml\" value=\"0.334375\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_signup.xml\" value=\"0.4395833333333333\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/signup_fragment.xml\" value=\"0.33\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/menu/bottom_nav_menu.xml\" value=\"0.334375\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/mipmap-anydpi-v26/madison_image.xml\" value=\"0.225\" />\r\n        <entry key=\"..\\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_maintenance.xml\" value=\"0.19157608695652173\" />\r\n        <entry key=\"..\\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_login.xml\" value=\"0.25\" />\r\n        <entry key=\"..\\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_maintenance.xml\" value=\"0.268\" />\r\n        <entry key=\"..\\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_payment.xml\" value=\"0.2390625\" />\r\n        <entry key=\"..\\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/landlord_maintenance_fragment.xml\" value=\"0.3\" />\r\n        <entry key=\"app/src/main/res/layout/activity_account.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/activity_main.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_apply.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_landlord_application.xml\" value=\"0.165\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_landlord_apply.xml\" value=\"0.1412280701754386\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_landlord_payment.xml\" value=\"0.165\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_login.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_maintenance.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_payment.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_signup.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_tenant_apply.xml\" value=\"0.1\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_tenant_payment.xml\" value=\"0.1412280701754386\" />\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" default=\"true\" project-jdk-name=\"11\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 67c992b1b6905caf1c285ef555ff27487d5e1548)
++++ b/.idea/misc.xml	(date 1633730785722)
+@@ -6,28 +6,30 @@
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_account.xml" value="0.334375" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_login.xml" value="0.2515625" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_main.xml" value="0.371875" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_apply.xml" value="0.559375" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_apply.xml" value="0.384375" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_maintenance.xml" value="0.384375" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_payment.xml" value="0.384375" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_login.xml" value="0.334375" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_maintenance.xml" value="0.4134963768115942" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_payment.xml" value="0.559375" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_signup.xml" value="0.4395833333333333" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_tenant_maintenance.xml" value="0.384375" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_tenant_payment.xml" value="0.384375" />
++        <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/list_item_maintenance_request.xml" value="0.384375" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/signup_fragment.xml" value="0.33" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/menu/bottom_nav_menu.xml" value="0.334375" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/mipmap-anydpi-v26/madison_image.xml" value="0.225" />
+-        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_maintenance.xml" value="0.19157608695652173" />
+         <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_login.xml" value="0.25" />
+-        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_maintenance.xml" value="0.268" />
+-        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_payment.xml" value="0.2390625" />
+-        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/landlord_maintenance_fragment.xml" value="0.3" />
++        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_maintenance.xml" value="0.2" />
++        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/landlord_maintenance_fragment.xml" value="0.268" />
+         <entry key="app/src/main/res/layout/activity_account.xml" value="0.19519927536231885" />
+         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19519927536231885" />
+         <entry key="app/src/main/res/layout/fragment_apply.xml" value="0.19519927536231885" />
+-        <entry key="app/src/main/res/layout/fragment_landlord_application.xml" value="0.165" />
+-        <entry key="app/src/main/res/layout/fragment_landlord_apply.xml" value="0.1412280701754386" />
+-        <entry key="app/src/main/res/layout/fragment_landlord_payment.xml" value="0.165" />
+-        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.19519927536231885" />
+-        <entry key="app/src/main/res/layout/fragment_maintenance.xml" value="0.19519927536231885" />
++        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.335" />
++        <entry key="app/src/main/res/layout/fragment_maintenance.xml" value="0.20833333333333334" />
+         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.19519927536231885" />
+         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.19519927536231885" />
+-        <entry key="app/src/main/res/layout/fragment_tenant_apply.xml" value="0.1" />
+-        <entry key="app/src/main/res/layout/fragment_tenant_payment.xml" value="0.1412280701754386" />
+       </map>
+     </option>
+   </component>
