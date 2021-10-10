@@ -62,22 +62,15 @@
 
     <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/login_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/MadRentalsBigLoadingButtonStyle"
         android:text="Log In"
-        android:background="@drawable/loading_button_bg"
-        android:textColor="@color/white"
-        android:elevation="6dp"
-        app:spinning_bar_color="@color/white"
-        app:spinning_bar_padding="6dp"
-        app:initialCornerAngle="6dp"
         app:layout_constraintBottom_toTopOf="@id/login_no_account_text"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_password_input"
         app:layout_constraintHeight_min="56dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_password_input"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_max="300dp"
-        app:layout_constraintWidth_percent="0.6" />
+        app:layout_constraintWidth_percent="0.6"/>
 
     <!-- <Button
         android:id="@+id/login_button"

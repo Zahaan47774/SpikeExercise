@@ -204,51 +204,17 @@
         android:textSize="12sp"
         android:visibility="gone"/>
 
-    <Button
+    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/signup_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.6"
-        app:layout_constraintHeight_min="56dp"
-        app:layout_constraintWidth_max="300dp"
-        android:text="SIGN UP"
-        app:layout_constraintTop_toBottomOf="@id/signup_password_input"
+        style="@style/MadRentalsBigLoadingButtonStyle"
+        android:text="Sign Up"
         app:layout_constraintBottom_toTopOf="@id/signup_have_account_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/signup_progress_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        app:indicatorColor="@color/white"
-        app:layout_constraintStart_toStartOf="@id/signup_button"
-        app:layout_constraintEnd_toEndOf="@id/signup_button"
-        app:layout_constraintTop_toTopOf="@id/signup_button"
-        app:layout_constraintBottom_toBottomOf="@id/signup_button"
-        app:indicatorSize="24dp"
-        android:elevation="8dp"
-        android:visibility="gone"/>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/signup_success_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.6"
-        app:layout_constraintHeight_min="56dp"
-        app:layout_constraintWidth_max="300dp"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:text="SUCCESS"
-        android:textColor="@color/lime_green"
-        app:icon="@drawable/ic_baseline_check_circle_outline_24"
-        app:iconGravity="textStart"
-        app:iconTint="@color/lime_green"
         app:layout_constraintTop_toBottomOf="@id/signup_password_input"
-        app:layout_constraintBottom_toTopOf="@id/signup_have_account_text"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_min="56dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="300dp"
+        app:layout_constraintWidth_percent="0.6"/>
 
     <TextView
         android:id="@+id/signup_have_account_text"

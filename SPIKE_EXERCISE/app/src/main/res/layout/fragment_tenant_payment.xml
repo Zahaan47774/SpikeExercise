@@ -178,18 +178,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/payment_confirm_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintWidth_percent="0.6"
-        app:layout_constraintHeight_min="56dp"
-        app:layout_constraintWidth_max="300dp"
-        android:text="CONFIRM PAYMENT"
-        app:layout_constraintTop_toBottomOf="@id/payment_bank_type_input"
+        style="@style/MadRentalsBigLoadingButtonStyle"
+        android:text="Confirm Payment"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/payment_bank_type_input"
+        app:layout_constraintHeight_min="48dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintWidth_max="300dp"
+        app:layout_constraintWidth_percent="0.6"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.spike_exercise.AccountActivity;
 import com.example.spike_exercise.MainActivity;
 import com.example.spike_exercise.data.LoginRepository;
 import com.example.spike_exercise.data.model.UserAccount;
@@ -147,7 +148,7 @@ public class LoginFragment extends Fragment implements LoginRepository.AuthListe
 
     @Override
     public void onSuccess(UserAccount user) {
-        loginButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
+        loginButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), AccountActivity.getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -168,21 +169,5 @@ public class LoginFragment extends Fragment implements LoginRepository.AuthListe
         } else {
             passwordInput.setError(e.getMessage());
         }
-    }
-
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId, int tintColor) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-        drawable.setTint(context.getResources().getColor(tintColor));
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
     }
 }

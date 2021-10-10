@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_navigate_to_signup"
-            app:destination="@id/navigation_signup" />
+            app:destination="@id/navigation_signup"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
     </fragment>
 
     <fragment
@@ -22,6 +24,8 @@
         tools:layout="@layout/fragment_signup" >
         <action
             android:id="@+id/action_navigate_to_login"
-            app:destination="@id/navigation_login" />
+            app:destination="@id/navigation_login"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 </navigation>

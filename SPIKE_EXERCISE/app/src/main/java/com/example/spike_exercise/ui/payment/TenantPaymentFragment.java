@@ -1,6 +1,7 @@
 package com.example.spike_exercise.ui.payment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.spike_exercise.AccountActivity;
+import com.example.spike_exercise.R;
 import com.example.spike_exercise.data.DatabaseKeys;
 import com.example.spike_exercise.data.LoginRepository;
 import com.example.spike_exercise.data.model.UserAccount;
@@ -45,10 +48,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+
 public class TenantPaymentFragment extends Fragment implements OnCompleteListener<Void> {
 
     private TenantPaymentViewModel tenantPaymentViewModel;
     private FragmentTenantPaymentBinding binding;
+
+    private CircularProgressButton payButton;
 
     FirebaseFirestore db;
 
@@ -61,7 +68,7 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
         binding = FragmentTenantPaymentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final Button pay = binding.paymentConfirmButton;
+        payButton = binding.paymentConfirmButton;
         final TextView balanceText = binding.balance;
         final AutoCompleteTextView accountTypeInput = (AutoCompleteTextView) binding.paymentBankTypeInput.getEditText();
         db = FirebaseFirestore.getInstance();
@@ -75,10 +82,11 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
             }
         });
 
-        pay.setOnClickListener(new View.OnClickListener() {
+        payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(validatePaymentInformation()) {
+                    payButton.startAnimation();
                     UserAccount currentUser = LoginRepository.getInstance().getCurrentUser();
                     final float amount = Float.parseFloat(binding.paymentAmountInput.getEditText().getText().toString());
                     WriteBatch batch = db.batch();
@@ -157,9 +165,16 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if(task.isSuccessful()) {
-
+            payButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), AccountActivity.getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    payButton.revertAnimation();
+                }
+            };
+            new Handler().postDelayed(runnable, 1000);
         } else {
-
+            payButton.revertAnimation();
         }
     }
 }

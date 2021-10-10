@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.spike_exercise.AccountActivity;
 import com.example.spike_exercise.R;
 import com.example.spike_exercise.data.AccountType;
 import com.example.spike_exercise.data.DatabaseKeys;
@@ -29,6 +30,8 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputLayout;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+
 public class SignupFragment extends Fragment implements OnCompleteListener<Void> {
 
     private static final String LOCAL_FIELD_USERS_COMP_NAME = "localCompanyName";
@@ -38,9 +41,7 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
     private FragmentSignupBinding binding;
 
     private TextInputLayout firstNameInput, lastNameInput, propertyMgrInput, companyNameInput, emailInput, passwordInput;
-    private TextView passwordReqText;
-    private Button signupButton, signupSuccessButton;
-    private CircularProgressIndicator signupProgressIndicator;
+    private CircularProgressButton signupButton;
 
     public static SignupFragment newInstance() {
         return new SignupFragment();
@@ -60,11 +61,6 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
         companyNameInput        = binding.signupCompanyNameInput;
         emailInput              = binding.signupEmailAddressInput;
         passwordInput           = binding.signupPasswordInput;
-
-        passwordReqText         = binding.signupPasswordReqText;
-
-        signupSuccessButton     = binding.signupSuccessButton;
-        signupProgressIndicator = binding.signupProgressIndicator;
 
         // Load saved text input states on resuming from a configuration change
         if(savedInstanceState != null) {
@@ -98,9 +94,10 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
         Button loginButton = binding.signupLoginButton;
         loginButton.setOnClickListener(this::navigateToLoginFragment);
 
-        signupButton = binding.signupButton;;
+        signupButton = binding.signupButton;
         signupButton.setOnClickListener(view -> {
             if(validateTextInputs()) {
+                signupButton.startAnimation();
                 mViewModel.createUser(
                         firstNameInput.getEditText().getText().toString(),
                         lastNameInput.getEditText().getText().toString(),
@@ -110,18 +107,6 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
                         passwordInput.getEditText().getText().toString(),
                         SignupFragment.this
                 );
-            }
-        });
-
-        mViewModel.observeBusyStatus(getViewLifecycleOwner(), busy -> {
-            if(busy) {
-                signupButton.setText("");
-                signupButton.setEnabled(false);
-                signupProgressIndicator.setVisibility(View.VISIBLE);
-            } else {
-                signupButton.setText("SIGN UP");
-                signupButton.setEnabled(true);
-                signupProgressIndicator.setVisibility(View.GONE);
             }
         });
 
@@ -162,15 +147,16 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if(task.isSuccessful()) {
-            signupButton.setVisibility(View.INVISIBLE);
-            signupSuccessButton.setVisibility(View.VISIBLE);
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
+            signupButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), AccountActivity.getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
+            Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     navigateToLoginFragment(signupButton);
                 }
-            }, 500);
+            };
+            new Handler().postDelayed(runnable, 500);
+        } else {
+            signupButton.revertAnimation();
         }
     }
 }

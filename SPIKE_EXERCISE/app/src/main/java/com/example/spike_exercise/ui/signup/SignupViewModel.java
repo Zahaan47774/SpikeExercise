@@ -83,7 +83,7 @@ public class SignupViewModel extends ViewModel implements OnCompleteListener<Voi
         userData.put("firstName", firstName);
         userData.put("lastName", lastName);
         userData.put("companyName", companyName);
-        userBalance.put("balance", 0);
+        userData.put("balance", 0);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         Task<AuthResult> authTask = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password);
         Task<Void> signupTask = authTask.continueWithTask(task -> {
@@ -92,10 +92,10 @@ public class SignupViewModel extends ViewModel implements OnCompleteListener<Voi
                 WriteBatch batch = firestore.batch();
 
                 DocumentReference newUserData = firestore.collection("users").document(newUser.getUid());
-                DocumentReference newUserBalance = firestore.collection("payments").document(newUser.getUid());
+                //DocumentReference newUserBalance = firestore.collection("payments").document(newUser.getUid());
 
                 batch.set(newUserData, userData);
-                batch.set(newUserBalance, userBalance);
+                //batch.set(newUserBalance, userBalance);
 
                 return batch.commit();
             }
