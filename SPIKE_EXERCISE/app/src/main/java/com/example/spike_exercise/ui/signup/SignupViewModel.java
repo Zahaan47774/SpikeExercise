@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.spike_exercise.data.AccountType;
+import com.example.spike_exercise.data.DatabaseKeys;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -77,13 +78,17 @@ public class SignupViewModel extends ViewModel implements OnCompleteListener<Voi
         return passwordText != null && passwordText.length() >= 8;
     }
 
-    public void createUser(String firstName, String lastName, String propertyMgr, String companyName, String emailAddress, String password, OnCompleteListener<Void> onCompleteListener) {
+    public void createUser(String firstName, String lastName, String companyName, String emailAddress, String password, OnCompleteListener<Void> onCompleteListener) {
         busyStatus.setValue(true);
-        userData.put("accountType", selectedAccountType.getValue().ordinal());
-        userData.put("firstName", firstName);
-        userData.put("lastName", lastName);
-        userData.put("companyName", companyName);
-        userData.put("balance", 0);
+        if(selectedAccountType.getValue() == AccountType.LANDLORD && (companyName == null || companyName.isEmpty())) {
+            companyName = String.format("%s %s", firstName, lastName);
+        }
+        userData.put(DatabaseKeys.FIELD_USERS_ACCOUNT_TYPE, selectedAccountType.getValue().ordinal());
+        userData.put(DatabaseKeys.FIELD_USERS_FIRST_NAME  , firstName);
+        userData.put(DatabaseKeys.FIELD_USERS_LAST_NAME   , lastName);
+        userData.put(DatabaseKeys.FIELD_USERS_PROP_MGR    , companyName);
+        userData.put(DatabaseKeys.FIELD_USERS_LANDLORD_ID , "");
+        userData.put(DatabaseKeys.FIELD_USERS_BALANCE     , 0);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         Task<AuthResult> authTask = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password);
         Task<Void> signupTask = authTask.continueWithTask(task -> {
