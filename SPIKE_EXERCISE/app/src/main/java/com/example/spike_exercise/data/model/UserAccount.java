@@ -12,8 +12,8 @@ public class UserAccount extends Account {
     private final long creationTimestamp;
     private final long lastSignInTimestamp;
 
-    public UserAccount(String uid, String emailAddress, long creationTimestamp, long lastSignInTimestamp, String propertyManager, String firstName, String lastName, AccountType accountType) {
-        super(uid, propertyManager, firstName, lastName, accountType);
+    public UserAccount(String uid, String emailAddress, long creationTimestamp, long lastSignInTimestamp, String propertyManager, String landlordID, String firstName, String lastName, AccountType accountType) {
+        super(uid, propertyManager, landlordID, firstName, lastName, accountType);
         this.emailAddress = emailAddress;
         this.creationTimestamp = creationTimestamp;
         this.lastSignInTimestamp = lastSignInTimestamp;

@@ -15,14 +15,16 @@ public abstract class Account {
 
     private final String uid;
     private final String propertyManager;
+    private final String landlordID;
     private final String firstName;
     private final String lastName;
     private final String fullName;
     private final AccountType accountType;
 
-    protected Account(String uid, String propertyManager, String firstName, String lastName, AccountType accountType) {
+    protected Account(String uid, String propertyManager, String landlordID, String firstName, String lastName, AccountType accountType) {
         this.uid = uid;
         this.propertyManager = propertyManager;
+        this.landlordID = landlordID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.fullName = String.format("%s %s", firstName, lastName);
@@ -35,6 +37,10 @@ public abstract class Account {
 
     public String getPropertyManager() {
         return propertyManager;
+    }
+
+    public String getLandlordID() {
+        return landlordID;
     }
 
     public String getFirstName() {

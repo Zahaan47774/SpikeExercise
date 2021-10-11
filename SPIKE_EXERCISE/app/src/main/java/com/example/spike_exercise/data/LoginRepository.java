@@ -123,6 +123,7 @@ public class LoginRepository implements EventListener<DocumentSnapshot> {
         long    lastSignInTimestamp = user.getMetadata().getLastSignInTimestamp();
         Integer accountTypeFirestore = userData.get("accountType", Integer.class);
         String  companyName = userData.get("companyName", String.class);
+        String  landlordID = userData.get("landlordID", String.class);
         String  firstName = userData.get("firstName", String.class);
         String  lastName = userData.get("lastName", String.class);
 
@@ -135,6 +136,7 @@ public class LoginRepository implements EventListener<DocumentSnapshot> {
                 creationTimestamp,
                 lastSignInTimestamp,
                 companyName,
+                landlordID,
                 firstName,
                 lastName,
                 AccountType.fromFirestore(accountTypeFirestore)
