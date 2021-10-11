@@ -1,12 +1,20 @@
 package com.example.spike_exercise.ui.maintenance;
 
 public class Request {
-    public String userID,tenantID;
+    public String userID,tenantID, requestID;
     public String request,response;
     public boolean priority;
+    public Request(String userID,String tenantID,String request,boolean priority, String requestID){
+        this.userID = userID;
+        this.tenantID = tenantID; // landlordID
+        this.requestID = requestID;
+        this.request = request;
+        this.response = "";
+        this.priority = priority;
+    }
     public Request(String userID,String tenantID,String request,boolean priority){
         this.userID = userID;
-        this.tenantID = tenantID;
+        this.tenantID = tenantID; // landlordID
         this.request = request;
         this.response = "";
         this.priority = priority;

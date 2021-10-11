@@ -19,7 +19,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.spike_exercise.R;
+import com.example.spike_exercise.data.DatabaseKeys;
 import com.example.spike_exercise.data.LoginRepository;
+import com.example.spike_exercise.data.model.Account;
 import com.example.spike_exercise.databinding.FragmentLandlordPaymentBinding;
 import com.example.spike_exercise.databinding.FragmentTenantMaintenanceBinding;
 import com.example.spike_exercise.ui.maintenance.Request;
@@ -29,9 +31,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 
@@ -40,7 +44,7 @@ public class LandlordPaymentFragment extends Fragment {
     private LandlordPaymentViewModel mViewModel;
     private FragmentLandlordPaymentBinding binding;
     PaymentModel userPayment;
-    TextView text;
+    TextView text,landlord;
     FirebaseFirestore db;
     EditText ed1;
     int addAmount;
@@ -54,21 +58,20 @@ public class LandlordPaymentFragment extends Fragment {
     ) {
         binding = FragmentLandlordPaymentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        addAmount =0;
-        db = FirebaseFirestore.getInstance();
-        Spinner spinner = binding.spinner3;
+        addAmount = 0;db = FirebaseFirestore.getInstance();
         ArrayList<PaymentModel> list = new ArrayList<>();
         text = binding.textView7;
+        Spinner spinner = binding.spinner3;
         ed1 = binding.editTextTextPersonName;
         Button button = binding.button2;
-        db.collection("payments").whereEqualTo("tenantID", LoginRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("users").whereEqualTo("landlordID", LoginRepository.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(new PaymentModel(Integer.parseInt((String) document.get("amount")),(String) document.get("name"),(String) document.get("tenantID"),(String) document.get("userID"), document.getId()));
+                        list.add(new PaymentModel(document.getLong("balance").intValue(),document.getId(),(String) document.get("firstName")));
                     }
+
                     ArrayAdapter<PaymentModel> adapter = new ArrayAdapter<PaymentModel>(getActivity(), android.R.layout.simple_spinner_dropdown_item,list);
                     spinner.setAdapter(adapter);
                     spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -77,7 +80,7 @@ public class LandlordPaymentFragment extends Fragment {
                         public void onItemSelected(AdapterView<?> adapterView, View view,
                                                    int position, long id) {
                             userPayment = adapter.getItem(position);
-                            text.setText(String.valueOf(userPayment.getAmount()));
+                            text.setText(String.valueOf(userPayment.getBalance()));
                             button.setOnClickListener(this::save);
                         }
 
@@ -85,11 +88,14 @@ public class LandlordPaymentFragment extends Fragment {
                             if(isParsable(ed1.getText().toString())){
                                 addAmount = Integer.parseInt(ed1.getText().toString());
                             }
-                            int total = addAmount+ userPayment.amount;
-                            db.collection("payments").document(userPayment.paymentID).update("amount",String.valueOf(total)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                             int total = addAmount+ userPayment.getBalance();
+                            db.collection("users").document(userPayment.paymentID).update("balance",total).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    System.out.println("Suceess");
+
+                                    System.out.println("Success");
+                                    getActivity().recreate();
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -104,7 +110,7 @@ public class LandlordPaymentFragment extends Fragment {
                     });
 
                 } else {
-                    System.out.println("Error");
+                    System.out.println("No users available");
                 }
             }
         });

@@ -1,22 +1,20 @@
 package com.example.spike_exercise.ui.payment;
 
 public class PaymentModel {
-    public  String name,userID,tenantID,paymentID;
-    public int amount;
-    public PaymentModel(int amount,String name,String tenantID,String userID,String paymentID){
-        this.amount=amount;
-        this.name=name;
-        this.tenantID=tenantID;
-        this.userID=userID;
+    public  String paymentID,name;
+    int balance;
+    public PaymentModel(int balance,String paymentID,String name){
+        this.balance = balance;
         this.paymentID = paymentID;
+        this.name = name;
     }
 
-    public int getAmount() {
-        return amount;
+    public String getPaymentID() {
+        return paymentID;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setPaymentID(String paymentID) {
+        this.paymentID = paymentID;
     }
 
     public String getName() {
@@ -27,21 +25,14 @@ public class PaymentModel {
         this.name = name;
     }
 
-    public String getTenantID() {
-        return tenantID;
+    public int getBalance() {
+        return balance;
     }
 
-    public void setTenantID(String tenantID) {
-        this.tenantID = tenantID;
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
     public String toString() {
         return name;
     }
