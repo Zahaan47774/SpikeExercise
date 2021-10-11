@@ -7,7 +7,7 @@ import com.example.spike_exercise.data.AccountType;
 public class LandlordAccount extends Account {
 
     public LandlordAccount(String uid, String propertyManager, String firstName, String lastName) {
-        super(uid, propertyManager, firstName, lastName, AccountType.LANDLORD);
+        super(uid, propertyManager, null, firstName, lastName, AccountType.LANDLORD);
     }
 
     @NonNull

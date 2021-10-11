@@ -85,9 +85,10 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                UserAccount currentUser = LoginRepository.getInstance().getCurrentUser();
+                //if(.getLandlordID().isEmpty())
                 if(validatePaymentInformation()) {
                     payButton.startAnimation();
-                    UserAccount currentUser = LoginRepository.getInstance().getCurrentUser();
                     final float amount = Float.parseFloat(binding.paymentAmountInput.getEditText().getText().toString());
                     WriteBatch batch = db.batch();
 
