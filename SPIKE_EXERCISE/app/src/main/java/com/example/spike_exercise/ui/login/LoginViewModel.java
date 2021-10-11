@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
 
+import com.example.spike_exercise.data.AuthListener;
 import com.example.spike_exercise.data.LoginRepository;
 
 public class LoginViewModel extends ViewModel {
@@ -20,7 +21,7 @@ public class LoginViewModel extends ViewModel {
         this.busyStatus = new MutableLiveData<>();
     }
 
-    public void login(String email, String password, LoginRepository.AuthListener authListener) {
+    public void login(String email, String password, AuthListener authListener) {
         loginRepository.login(email, password, authListener);
     }
 

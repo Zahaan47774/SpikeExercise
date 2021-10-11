@@ -11,12 +11,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.spike_exercise.data.AccountType;
+import com.example.spike_exercise.data.AuthListener;
 import com.example.spike_exercise.data.DatabaseKeys;
+import com.example.spike_exercise.data.LoginRepository;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,7 +30,7 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignupViewModel extends ViewModel implements OnCompleteListener<Void> {
+public class SignupViewModel extends ViewModel {
 
     private FirebaseFirestore firestore;
 
@@ -78,7 +82,7 @@ public class SignupViewModel extends ViewModel implements OnCompleteListener<Voi
         return passwordText != null && passwordText.length() >= 8;
     }
 
-    public void createUser(String firstName, String lastName, String companyName, String emailAddress, String password, OnCompleteListener<Void> onCompleteListener) {
+    public void createUser(String firstName, String lastName, String companyName, String emailAddress, String password, AuthListener authListener) {
         busyStatus.setValue(true);
         if(selectedAccountType.getValue() == AccountType.LANDLORD && (companyName == null || companyName.isEmpty())) {
             companyName = String.format("%s %s", firstName, lastName);
@@ -103,15 +107,22 @@ public class SignupViewModel extends ViewModel implements OnCompleteListener<Voi
                 //batch.set(newUserBalance, userBalance);
 
                 return batch.commit();
+            } else if(task.getException() != null) {
+                authListener.onFailure(task.getException());
+            } else {
+                authListener.onFailure(new FirebaseAuthInvalidUserException("Unknown Error", "An unknown error occurred. Please try again later."));
             }
             return null;
         });
-        signupTask.addOnCompleteListener(this);
-        signupTask.addOnCompleteListener(onCompleteListener);
-    }
-
-    @Override
-    public void onComplete(@NonNull Task<Void> task) {
-        busyStatus.setValue(false);
+        signupTask.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    authListener.onSuccess(null);
+                } else {
+                    //authListener.onFailure(task.getException());
+                }
+            }
+        });
     }
 }

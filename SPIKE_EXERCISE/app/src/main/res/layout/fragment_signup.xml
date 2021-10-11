@@ -173,18 +173,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/signup_password_req_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginStart="14dp"
-        app:layout_constraintStart_toStartOf="@id/signup_password_input"
-        app:layout_constraintTop_toBottomOf="@id/signup_password_input"
-        android:text="Password must be at least 8 characters long."
-        android:textSize="12sp"
-        android:visibility="gone"/>
-
     <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/signup_button"
         style="@style/MadRentalsBigLoadingButtonStyle"
@@ -196,6 +184,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_max="300dp"
         app:layout_constraintWidth_percent="0.6"/>
+
+    <TextView
+        android:id="@+id/signup_error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="14dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signup_button"
+        android:text="An error occurred."
+        android:textSize="12sp"
+        android:textColor="@color/madrentals_red_light"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/signup_have_account_text"

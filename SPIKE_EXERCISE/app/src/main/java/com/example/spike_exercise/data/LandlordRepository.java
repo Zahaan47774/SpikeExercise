@@ -47,7 +47,6 @@ public class LandlordRepository implements EventListener<QuerySnapshot> {
         query.get();
     }
 
-
     public static void init() {
         getInstance();
     }

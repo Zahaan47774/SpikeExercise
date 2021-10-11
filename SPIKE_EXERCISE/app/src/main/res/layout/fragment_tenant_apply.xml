@@ -6,26 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.apply.TenantApplyFragment">
 
-    <EditText
-        android:id="@+id/application_name"
-        android:layout_width="239dp"
-        android:layout_height="72dp"
-        android:ems="10"
-        android:hint="Full Name"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.591" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="264dp"
-        android:layout_height="62dp"
-        android:text="Application"
+        android:layout_height="wrap_content"
+        android:text="Submit an Application"
         android:textAlignment="center"
         android:textSize="34sp"
         android:textStyle="bold"
@@ -36,20 +21,49 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.158" />
 
-    <EditText
-        android:id="@+id/application_apply_address"
-        android:layout_width="279dp"
-        android:layout_height="109dp"
-        android:ems="10"
-        android:hint="Please enter the address you are applying to"
-        android:inputType="textPostalAddress"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/application_property_manager"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Property Manager"
+        app:layout_constraintBottom_toTopOf="@+id/application_apply_address"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.428" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintWidth_max="400dp"
+        app:layout_constraintWidth_percent="0.8">
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/application_apply_address"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Address"
+        app:helperText="Please enter the address you are applying to"
+        app:layout_constraintBottom_toTopOf="@+id/submit_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/application_property_manager"
+        app:layout_constraintWidth_max="400dp"
+        app:layout_constraintWidth_percent="0.8">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPostalAddress" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <ImageView
         android:id="@+id/imageView3"
@@ -71,29 +85,29 @@
         android:textSize="20sp"
         tools:layout_editor_absoluteY="410dp" />
 
-    <Button
+    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
         android:id="@+id/submit_button"
-        android:layout_width="182dp"
-        android:layout_height="77dp"
+        style="@style/MadRentalsBigLoadingButtonStyle"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_min="52dp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.832" />
+        app:layout_constraintTop_toBottomOf="@+id/application_apply_address"
+        app:layout_constraintWidth_max="300dp"
+        app:layout_constraintWidth_percent="0.6" />
 
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="254dp"
-        android:layout_height="69dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/application_error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="An error occurred"
+        android:textColor="@color/madrentals_red_light"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.279" />
+        app:layout_constraintTop_toBottomOf="@id/submit_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
