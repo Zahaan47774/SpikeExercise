@@ -28,7 +28,10 @@
         <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/landlord_maintenance_fragment.xml" value="0.268" />
         <entry key="..\:/Users/thoug/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_application.xml" value="0.11666666666666667" />
         <entry key="..\:/Users/thoug/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_apply.xml" value="0.15217391304347827" />
-        <entry key="..\:/Users/thoug/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_tenant_apply.xml" value="0.5890151515151515" />
+        <entry key="..\:/Users/thoug/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_maintenance.xml" value="0.11666666666666667" />
+        <entry key="..\:/Users/thoug/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_tenant_apply.xml" value="0.33" />
+        <entry key="..\:/Users/thoug/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_tenant_maintenance.xml" value="0.11666666666666667" />
+        <entry key="..\:/Users/thoug/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_tenant_payment.xml" value="0.11666666666666667" />
         <entry key="app/src/main/res/layout/activity_account.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/fragment_apply.xml" value="0.19519927536231885" />

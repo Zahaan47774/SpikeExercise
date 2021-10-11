@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -38,7 +39,6 @@ public class TenantApplyFragment extends Fragment {
     FirebaseAuth auth;
     String userID;
     String company;
-    String name;
 
     @Nullable
     @Override
@@ -54,14 +54,14 @@ public class TenantApplyFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Spinner spinner = binding.spinner2;
+        TextInputLayout propertymanagerlayout = binding.applicationPropertyManager;
+        AutoCompleteTextView propertymanagerinput = (AutoCompleteTextView) propertymanagerlayout.getChildAt(0);
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         userID = LoginRepository.getInstance().getCurrentUser().getUid();
 
         final Button submit_button = binding.submitButton;
         TextInputLayout address = binding.applicationApplyAddress;
-        EditText fullName = binding.applicationName;
         ArrayList<TenantInfo> list = new ArrayList<>();
         db.collection("users").whereEqualTo("accountType",1).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -70,9 +70,8 @@ public class TenantApplyFragment extends Fragment {
                     list.add(new TenantInfo(document.getId(),(String) document.get("companyName")));
                 }
                 ArrayAdapter<TenantInfo> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
-                spinner.setAdapter(adapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+                propertymanagerinput.setAdapter(adapter);
+                propertymanagerinput.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view1,
                                                int position, long id) {
@@ -88,8 +87,8 @@ public class TenantApplyFragment extends Fragment {
             }
         });
         submit_button.setOnClickListener(view12 -> {
-            Application applicant = new Application(userID,fullName.getText().toString(), 
-                    address.getText().toString(),company);
+            Application applicant = new Application(userID,LoginRepository.getInstance().getCurrentUser().getFullName(),
+                    address.toString(),company);
             Task<DocumentReference> applyTask = db.collection("application").add(applicant);
         });
     }
