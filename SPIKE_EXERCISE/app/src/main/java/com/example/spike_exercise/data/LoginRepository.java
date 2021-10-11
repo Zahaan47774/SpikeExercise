@@ -153,9 +153,4 @@ public class LoginRepository implements EventListener<DocumentSnapshot> {
             Log.i("LandlordRepository", "onUpdate: an unknown error has occurred");
         }
     }
-
-    public interface AuthListener {
-        void onSuccess(UserAccount user);
-        void onFailure(Exception e);
-    }
 }

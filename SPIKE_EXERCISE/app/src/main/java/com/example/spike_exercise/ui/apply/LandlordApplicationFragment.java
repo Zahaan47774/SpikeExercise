@@ -42,7 +42,7 @@ public class LandlordApplicationFragment extends Fragment {
         
         db = FirebaseFirestore.getInstance();
         ArrayList<Application> list = new ArrayList<>();
-        db.collection("application").get().addOnCompleteListener(task -> {
+        db.collection("application").whereEqualTo("company", landLordCompany).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                     list.add(new Application((String) document.get("userID"),(String) document.get("name"),
@@ -52,16 +52,12 @@ public class LandlordApplicationFragment extends Fragment {
                 System.out.println("Error");
             }
         });
-        int applicantCount = 0;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getCompany().equals(landLordCompany))
-                applicantCount++;
-        }
-        if (list.isEmpty() || applicantCount == 0) {
+        if (list.isEmpty()) {
             addressName.setText("");
             tenetId = "";
             applyName.setText("No Applicants");
         }
+        
         accept.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
@@ -87,13 +83,11 @@ public class LandlordApplicationFragment extends Fragment {
 
         for (int i = 0; i < list.size(); i++) {
             int finalI = i;
-            if(list.get(finalI).getCompany().equals(landLordCompany)) {
                 next.setOnClickListener(view -> {
                     applyName.setText(list.get(finalI).getName());
                     tenetId = list.get(finalI).getUserID();
                     addressName.setText(list.get(finalI).getApplyAddress());
-                });
-            }
+            });
             if (i == list.size() - 1) {
                 i = 0;
             }

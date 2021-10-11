@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.example.spike_exercise.AccountActivity;
 import com.example.spike_exercise.MainActivity;
+import com.example.spike_exercise.data.AuthListener;
 import com.example.spike_exercise.data.LoginRepository;
 import com.example.spike_exercise.data.model.UserAccount;
 import com.example.spike_exercise.databinding.FragmentLoginBinding;
@@ -49,7 +50,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
 
-public class LoginFragment extends Fragment implements LoginRepository.AuthListener {
+public class LoginFragment extends Fragment implements AuthListener {
 
     private LoginViewModel       loginViewModel;
     private FragmentLoginBinding binding;

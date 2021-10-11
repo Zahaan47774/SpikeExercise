@@ -22,9 +22,11 @@ import android.widget.TextView;
 import com.example.spike_exercise.AccountActivity;
 import com.example.spike_exercise.R;
 import com.example.spike_exercise.data.AccountType;
+import com.example.spike_exercise.data.AuthListener;
 import com.example.spike_exercise.data.DatabaseKeys;
 import com.example.spike_exercise.data.LandlordRepository;
 import com.example.spike_exercise.data.model.LandlordAccount;
+import com.example.spike_exercise.data.model.UserAccount;
 import com.example.spike_exercise.databinding.FragmentSignupBinding;
 import com.example.spike_exercise.ui.TextInputValidator;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,7 +39,7 @@ import java.util.List;
 
 import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
 
-public class SignupFragment extends Fragment implements OnCompleteListener<Void> {
+public class SignupFragment extends Fragment implements AuthListener {
 
     private static final String LOCAL_FIELD_USERS_COMP_NAME = "localCompanyName";
     private static final String LOCAL_FIELD_USERS_EMAIL = "localEmail";
@@ -136,7 +138,6 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
             outState.putString(DatabaseKeys.FIELD_USERS_LAST_NAME, lastNameInput.getEditText().getText().toString());
             outState.putString(LOCAL_FIELD_USERS_COMP_NAME, companyNameInput.getEditText().getText().toString());
             outState.putString(LOCAL_FIELD_USERS_EMAIL, emailInput.getEditText().getText().toString());
-            //outState.putString(FIELD_PASSWORD, passwordInput.getEditText().getText().toString());
         }
     }
 
@@ -147,18 +148,22 @@ public class SignupFragment extends Fragment implements OnCompleteListener<Void>
     }
 
     @Override
-    public void onComplete(@NonNull Task<Void> task) {
-        if(task.isSuccessful()) {
-            signupButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), AccountActivity.getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    navigateToLoginFragment(signupButton);
-                }
-            };
-            new Handler().postDelayed(runnable, 500);
-        } else {
-            signupButton.revertAnimation();
-        }
+    public void onSuccess(UserAccount user) {
+        binding.signupErrorText.setVisibility(View.GONE);
+        signupButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), AccountActivity.getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                navigateToLoginFragment(signupButton);
+            }
+        };
+        new Handler().postDelayed(runnable, 500);
+    }
+
+    @Override
+    public void onFailure(Exception e) {
+        signupButton.revertAnimation();
+        binding.signupErrorText.setVisibility(View.VISIBLE);
+        binding.signupErrorText.setText(e.getMessage());
     }
 }
