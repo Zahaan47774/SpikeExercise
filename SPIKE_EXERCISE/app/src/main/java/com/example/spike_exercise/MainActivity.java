@@ -32,22 +32,24 @@ public class MainActivity extends AppCompatActivity {
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+        BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_maintenance, R.id.navigation_payment, R.id.navigation_apply)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavGraph navGraph = null;
+
         UserAccount user = LoginRepository.getInstance().getCurrentUser();
         // Change navigation layout depending on whether a tenant or landlord is signed in
         switch(user.getAccountType()) {
             case TENANT:
-                navGraph = navController.getNavInflater().inflate(R.navigation.navigation_main_tenant);
+                navController.setGraph(navController.getNavInflater().inflate(R.navigation.navigation_main_tenant));
+                bottomNavigationView.inflateMenu(R.menu.bottom_nav_tenant_menu);
                 break;
             case LANDLORD:
-                navGraph = navController.getNavInflater().inflate(R.navigation.navigation_main_landlord);
+                navController.setGraph(navController.getNavInflater().inflate(R.navigation.navigation_main_landlord));
+                bottomNavigationView.inflateMenu(R.menu.bottom_nav_landlord_menu);
                 break;
         }
-        navController.setGraph(navGraph);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
