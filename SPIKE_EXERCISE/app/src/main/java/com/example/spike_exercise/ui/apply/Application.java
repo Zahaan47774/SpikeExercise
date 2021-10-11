@@ -18,6 +18,7 @@ public class Application
         this.name = newName;
         this.applyAddress = newAddress;
         this.company = newCompany;
+        this.company = applicationID;
     }
     public void setName(String newName){
         this.name = newName;
