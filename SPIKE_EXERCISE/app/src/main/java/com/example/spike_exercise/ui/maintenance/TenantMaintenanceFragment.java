@@ -49,8 +49,9 @@ public class TenantMaintenanceFragment extends Fragment implements OnCompleteLis
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-         userID = LoginRepository.getInstance().getCurrentUser().getUid();
+        userID = LoginRepository.getInstance().getCurrentUser().getUid();
         ArrayList<TenantInfo> list = new ArrayList<>();
+
         db.collection("users").whereEqualTo("accountType",1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -90,7 +91,7 @@ public class TenantMaintenanceFragment extends Fragment implements OnCompleteLis
         binding = null;
     }
     public void save(View v){
-        Request request = new Request(userID,company,ed3.getText().toString(),priority);
+        Request request = new Request(userID,company,ed3.getText().toString(), priority);
         Task<DocumentReference> signupTask = db.collection("maintananence").add(request);
         signupTask.addOnCompleteListener(TenantMaintenanceFragment.this);
     }

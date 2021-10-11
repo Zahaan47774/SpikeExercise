@@ -88,9 +88,9 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         // if request is priority sort into high list
                         if ((boolean)document.get("priority")) {
-                            highPriority.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request"),(boolean) document.get("priority")));
+                            highPriority.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request"),(boolean) document.get("priority"), (String) document.getId()));
                         } else { // else sort into low list
-                            lowPriority.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request"),(boolean) document.get("priority")));
+                            lowPriority.add(new Request((String) document.get("tenantID"),(String) document.get("userID"),(String) document.get("request"),(boolean) document.get("priority"), (String) document.getId()));
                         }
                     }
                     //check if list is empty
@@ -98,8 +98,6 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
                         textView1.setText("");
                         textView2.setText("No maintenance requests");
                     } else {
-                        //textView2.setText("Click above to display requests");
-                        // }
                         // keeps track of what list, 0 if no high priorities
                         if (!highPriority.isEmpty()) {
                             highList = true;
@@ -156,7 +154,6 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
                                 } else {
                                     editText1.setText(null); // do not update collection because both lists are empty
                                 }
-
                         }
                     });
                 } else {
