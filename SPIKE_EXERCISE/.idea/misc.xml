@@ -26,21 +26,14 @@
         <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_login.xml" value="0.25" />
         <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_maintenance.xml" value="0.2" />
         <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/landlord_maintenance_fragment.xml" value="0.268" />
+        <entry key="..\:/Users/thoug/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_landlord_apply.xml" value="0.15217391304347827" />
         <entry key="app/src/main/res/layout/activity_account.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/fragment_apply.xml" value="0.19519927536231885" />
-        <entry key="app/src/main/res/layout/fragment_landlord_application.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/fragment_landlord_apply.xml" value="0.1412280701754386" />
-        <entry key="app/src/main/res/layout/fragment_landlord_maintenance.xml" value="0.12952898550724637" />
-        <entry key="app/src/main/res/layout/fragment_landlord_payment.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.19519927536231885" />
-        <entry key="app/src/main/res/layout/fragment_maintenance.xml" value="0.19519927536231885" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_maintenance.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/fragment_payment.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.19519927536231885" />
-        <entry key="app/src/main/res/layout/fragment_tenant_apply.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_tenant_maintenance.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_tenant_payment.xml" value="0.1412280701754386" />
-
       </map>
     </option>
   </component>
