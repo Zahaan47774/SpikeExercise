@@ -49,6 +49,8 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
     private Button button1, button2;
     private int index; // keeps track of what request is being shown
     private boolean highList;
+    private Request requestModel;
+
     FirebaseFirestore db;
     FirebaseAuth auth;
     Request maintenanceRequest;
@@ -96,82 +98,66 @@ public class LandlordMaintenanceFragment extends Fragment implements OnCompleteL
                         textView1.setText("");
                         textView2.setText("No maintenance requests");
                     } else {
-                        textView2.setText("Click above to display requests");
-                    }
-                    // keeps track of what list, 0 if no high priorities
-                    if (!highPriority.isEmpty()) {
-                        highList = true;
-                    }
-                    // displays new request on click
-                    button1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (highList) { // if on highList
-                                if (index == highPriority.size()) {
-                                    if (!lowPriority.isEmpty()) {
-                                        highList = false; // move to low list
-                                        index = 0; // restart index
-                                    } else {
-                                        index = 0; // keep cycling through high list and keep highList high
-                                    }
-                                }
-                                // display user id within textview1
-                                textView1.setText(highPriority.get(index).getTenantID());
-                                // display maintenance request within textview2
-                                textView2.setText(highPriority.get(index).getRequest());
-                                textView6.setText("High");
-                                index++;
-                            } else { // on lowList
-                                if (index == lowPriority.size()) {
-                                    if (!highPriority.isEmpty()) {
-                                        highList = true; // move to low list
-                                        index = 0; // restart index
-                                    } else {
-                                        index = 0; // keep cycling through high list and keep highList high
-                                    }
-                                }
-                                // display use id within textview1
-                                textView1.setText(lowPriority.get(index).getTenantID());
-                                // display maintenance request within textview2
-                                textView2.setText(lowPriority.get(index).getRequest());
-                                textView6.setText("Low");
-                                index++;
-                            }
+                        //textView2.setText("Click above to display requests");
+                        // }
+                        // keeps track of what list, 0 if no high priorities
+                        if (!highPriority.isEmpty()) {
+                            highList = true;
                         }
-                    });
+                        // displays new request on click
+                        button1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (highList) { // if on highList
+                                    if (index == highPriority.size()) {
+                                        if (!lowPriority.isEmpty()) {
+                                            highList = false; // move to low list
+                                            index = 0; // restart index
+                                        } else {
+                                            index = 0; // keep cycling through high list and keep highList high
+                                        }
+                                    }
+                                    // display user id within textview1
+                                    textView1.setText(highPriority.get(index).getTenantID());
+                                    // display maintenance request within textview2
+                                    textView2.setText(highPriority.get(index).getRequest());
+                                    textView6.setText("High");
+                                    index++;
+                                } else { // on lowList
+                                    if (index == lowPriority.size()) {
+                                        if (!highPriority.isEmpty()) {
+                                            highList = true; // move to low list
+                                            index = 0; // restart index
+                                        } else {
+                                            index = 0; // keep cycling through high list and keep highList high
+                                        }
+                                    }
+                                    // display use id within textview1
+                                    textView1.setText(lowPriority.get(index).getTenantID());
+                                    // display maintenance request within textview2
+                                    textView2.setText(lowPriority.get(index).getRequest());
+                                    textView6.setText("Low");
+                                    index++;
+                                }
+                            }
+                        });
+                    }
                     // sends response message on click
                     button2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             // update requests with landlord response
-                            // list.get(index).setResponse(editText1.getText().toString());
-                            //list.get(index).setResponse(editText1.getText().toString());
-                            if (highList) {
-                                highPriority.get(index).setResponse(editText1.getText().toString());
-                            } else {
-                                lowPriority.get(index).setResponse(editText1.getText().toString());
-                            }
-                            // how do i do this
-                            db.collection("maintananence").document(maintenanceRequest.getUserID()).update("response", editText1.getText().toString());
-                            editText1.setText(null);
-                        // save(view);
+                                if (highList && !highPriority.isEmpty()) {
+                                    requestModel = highPriority.get(index);
+                                    db.collection("maintananence").document(requestModel.requestID).update("response", editText1.getText().toString());
+                                } else if (!highList && !lowPriority.isEmpty()) {
+                                    requestModel = lowPriority.get(index);
+                                    db.collection("maintananence").document(requestModel.requestID).update("response", editText1.getText().toString());
+                                } else {
+                                    editText1.setText(null); // do not update collection because both lists are empty
+                                }
 
                         }
-/*
-                        private void save(View view) {
-                            db.collection("maintananence").document(list.get(index).toString()).update("response", editText1.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    System.out.println("Suceess");
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    System.out.println(e.getMessage());
-                                }
-                            });
-                        }
- */
                     });
                 } else {
                     System.out.println("Error");
