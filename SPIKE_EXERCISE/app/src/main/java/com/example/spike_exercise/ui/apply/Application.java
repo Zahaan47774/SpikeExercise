@@ -6,7 +6,14 @@ public class Application
     public String name;
     public String applyAddress;
     public String company;
+    public String applicationID;
     public Application(String newID,String newName, String newAddress, String newCompany){
+        this.userID = newID;
+        this.name = newName;
+        this.applyAddress = newAddress;
+        this.company = newCompany;
+    }
+    public Application(String newID,String newName, String newAddress, String newCompany,String applicationID){
         this.userID = newID;
         this.name = newName;
         this.applyAddress = newAddress;

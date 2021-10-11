@@ -13,9 +13,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.spike_exercise.data.LoginRepository;
 import com.example.spike_exercise.databinding.FragmentLandlordApplicationBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -24,6 +28,7 @@ public class LandlordApplicationFragment extends Fragment {
     FirebaseFirestore db;
     String tenetId = "";
     String landLordCompany;
+    int theindex = 0;
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState
@@ -42,56 +47,53 @@ public class LandlordApplicationFragment extends Fragment {
         
         db = FirebaseFirestore.getInstance();
         ArrayList<Application> list = new ArrayList<>();
-        db.collection("application").whereEqualTo("company", landLordCompany).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    list.add(new Application((String) document.get("userID"),(String) document.get("name"),
-                            (String) document.get("applyAddress"), (String) document.get("company")));
+
+        db.collection("application").whereEqualTo("company",landLordCompany).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(new Application((String) document.get("userID"), (String) document.get("name"),
+                                (String) document.get("applyAddress"), (String) document.get("company"), document.getId()));
+                    }
+                    if (list.isEmpty()) {
+                        addressName.setText("");
+                        tenetId = "";
+                        applyName.setText("No Applicants");
+                    }
+                    accept.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            DocumentReference userRef = db.collection("users").document(tenetId);
+                            userRef.update("landLordID", landLordCompany);
+                            DocumentReference docRef = db.collection("application").document(list.get(theindex).applicationID);
+                            docRef.delete();
+                        }
+                    });
+                    deny.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            DocumentReference docRef = db.collection("application").document(list.get(theindex).applicationID);
+                            docRef.delete();
+                        }
+                    });
+                    next.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            theindex++;
+                            if (theindex == list.size()) {
+                                theindex = 0;
+                            }
+                            applyName.setText(list.get(theindex).getName());
+                            tenetId = list.get(theindex).getUserID();
+                            addressName.setText(list.get(theindex).getApplyAddress());
+                        }
+                    });
+                } else {
+                    System.out.println("Error");
                 }
-            } else {
-                System.out.println("Error");
             }
         });
-        if (list.isEmpty()) {
-            addressName.setText("");
-            tenetId = "";
-            applyName.setText("No Applicants");
-        }
-        
-        accept.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    DocumentReference userRef = db.collection("users").document(tenetId);
-                    userRef.update("landLordID",landLordCompany);
-                    DocumentReference docRef = db.collection("application").document(document.getId());
-                    docRef.delete();
-                }
-            } else {
-                System.out.println("Error");
-            }
-        }));
-        deny.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    DocumentReference docRef = db.collection("application").document(document.getId());
-                    docRef.delete();
-                }
-            } else {
-                System.out.println("Error");
-            }
-        }));
-
-        for (int i = 0; i < list.size(); i++) {
-            int finalI = i;
-                next.setOnClickListener(view -> {
-                    applyName.setText(list.get(finalI).getName());
-                    tenetId = list.get(finalI).getUserID();
-                    addressName.setText(list.get(finalI).getApplyAddress());
-            });
-            if (i == list.size() - 1) {
-                i = 0;
-            }
-        }
         return root;
     }
 }
