@@ -36,20 +36,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.888" />
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="264dp"
-        android:layout_height="72dp"
-        android:foregroundTint="#910D0D"
-        android:hint="Please input your request"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421" />
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="273dp"
@@ -77,20 +63,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.236" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="136dp"
-        android:layout_height="26dp"
-        android:text="Pick Landlord"
-        android:textColor="#EF0909"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.19"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.357" />
 
     <TextView
         android:id="@+id/textView3"
