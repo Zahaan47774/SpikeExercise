@@ -65,7 +65,7 @@ public class LandlordApplicationFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             DocumentReference userRef = db.collection("users").document(tenetId);
-                            userRef.update("landLordID", landLordCompany);
+                            userRef.update("landlordID", landLordCompany);
                             DocumentReference docRef = db.collection("application").document(list.get(theindex).applicationID);
                             docRef.delete();
                         }

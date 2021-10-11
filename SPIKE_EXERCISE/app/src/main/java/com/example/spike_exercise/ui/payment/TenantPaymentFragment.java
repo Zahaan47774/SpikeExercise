@@ -86,24 +86,28 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
             @Override
             public void onClick(View view) {
                 UserAccount currentUser = LoginRepository.getInstance().getCurrentUser();
-                //if(.getLandlordID().isEmpty())
-                if(validatePaymentInformation()) {
-                    payButton.startAnimation();
-                    final float amount = Float.parseFloat(binding.paymentAmountInput.getEditText().getText().toString());
-                    WriteBatch batch = db.batch();
+                if(currentUser.getLandlordID() != null && !currentUser.getLandlordID().isEmpty()) {
+                    if (validatePaymentInformation()) {
+                        payButton.startAnimation();
+                        final float amount = Float.parseFloat(binding.paymentAmountInput.getEditText().getText().toString());
+                        WriteBatch batch = db.batch();
 
-                    batch.update(db.collection(DatabaseKeys.DOC_USERS).document(currentUser.getUid()), DatabaseKeys.FIELD_USERS_BALANCE, FieldValue.increment(-amount));
+                        batch.update(db.collection(DatabaseKeys.DOC_USERS).document(currentUser.getUid()), DatabaseKeys.FIELD_USERS_BALANCE, FieldValue.increment(-amount));
 
-                    Map<String, Object> paymentData = new HashMap<>();
-                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_AMOUNT, amount);
-                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_BALANCE, 0);
-                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_NAME, currentUser.getFullName());
-                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_TIMESTAMP, new Date().getTime());
-                    paymentData.put(DatabaseKeys.FIELD_PAYMENTS_TENANT_ID, currentUser.getUid());
-                    batch.set(db.collection(DatabaseKeys.DOC_PAYMENTS).document(), paymentData);
+                        Map<String, Object> paymentData = new HashMap<>();
+                        paymentData.put(DatabaseKeys.FIELD_PAYMENTS_AMOUNT, amount);
+                        paymentData.put(DatabaseKeys.FIELD_PAYMENTS_BALANCE, 0);
+                        paymentData.put(DatabaseKeys.FIELD_PAYMENTS_NAME, currentUser.getFullName());
+                        paymentData.put(DatabaseKeys.FIELD_PAYMENTS_TIMESTAMP, new Date().getTime());
+                        paymentData.put(DatabaseKeys.FIELD_PAYMENTS_TENANT_ID, currentUser.getUid());
+                        batch.set(db.collection(DatabaseKeys.DOC_PAYMENTS).document(), paymentData);
 
-                    Task<Void> paymentTask = batch.commit();
-                    paymentTask.addOnCompleteListener(TenantPaymentFragment.this);
+                        Task<Void> paymentTask = batch.commit();
+                        paymentTask.addOnCompleteListener(TenantPaymentFragment.this);
+                    }
+                } else {
+                    binding.paymentErrorText.setText("You don't have a landlord! Please submit an application first.");
+                    binding.paymentErrorText.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -138,6 +142,7 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
     @Override
     public void onComplete(@NonNull Task<Void> task) {
         if(task.isSuccessful()) {
+            binding.paymentErrorText.setVisibility(View.GONE);
             clearAllFields();
             payButton.doneLoadingAnimation(getResources().getColor(R.color.madrentals_red_light), AccountActivity.getBitmapFromVectorDrawable(getContext(), R.drawable.ic_baseline_check_circle_outline_24, R.color.white));
             Runnable runnable = new Runnable() {
@@ -148,6 +153,8 @@ public class TenantPaymentFragment extends Fragment implements OnCompleteListene
             };
             new Handler().postDelayed(runnable, 2000);
         } else {
+            binding.paymentErrorText.setText(task.getException().getMessage());
+            binding.paymentErrorText.setVisibility(View.VISIBLE);
             payButton.revertAnimation();
         }
     }

@@ -153,7 +153,7 @@ public class LoginFragment extends Fragment implements AuthListener {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                //loginButton.revertAnimation();
+                loginButton.revertAnimation();
                 navigateToMainActivity();
             }
         };
