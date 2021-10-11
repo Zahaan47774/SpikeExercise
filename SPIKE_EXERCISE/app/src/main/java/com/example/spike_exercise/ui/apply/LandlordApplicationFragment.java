@@ -42,7 +42,7 @@ public class LandlordApplicationFragment extends Fragment {
         
         db = FirebaseFirestore.getInstance();
         ArrayList<Application> list = new ArrayList<>();
-        db.collection("application").get().addOnCompleteListener(task -> {
+        db.collection("application").whereEqualTo("company", landLordCompany).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                     list.add(new Application((String) document.get("userID"),(String) document.get("name"),
@@ -58,7 +58,7 @@ public class LandlordApplicationFragment extends Fragment {
             applyName.setText("No Applicants");
         }
         
-        accept.setOnClickListener(view -> db.collection("application").whereEqualTo("company", landLordCompany).get().addOnCompleteListener(task -> {
+        accept.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                     DocumentReference userRef = db.collection("users").document(tenetId);
