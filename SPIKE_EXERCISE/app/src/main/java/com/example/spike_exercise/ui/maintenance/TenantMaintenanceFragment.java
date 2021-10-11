@@ -92,8 +92,10 @@ public class TenantMaintenanceFragment extends Fragment implements OnCompleteLis
     }
     public void save(View v){
         Request request = new Request(userID,company,ed3.getText().toString(), priority);
-        Task<DocumentReference> signupTask = db.collection("maintananence").add(request);
-        signupTask.addOnCompleteListener(TenantMaintenanceFragment.this);
+        if (LoginRepository.getInstance().getCurrentUser().getLandlordID() != null || !LoginRepository.getInstance().getCurrentUser().getLandlordID().isEmpty()) {
+            Task<DocumentReference> signupTask = db.collection("maintananence").add(request);
+            signupTask.addOnCompleteListener(TenantMaintenanceFragment.this);
+        }
     }
 
     @Override
