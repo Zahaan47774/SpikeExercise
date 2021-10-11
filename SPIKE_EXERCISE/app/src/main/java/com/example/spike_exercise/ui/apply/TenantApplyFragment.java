@@ -86,7 +86,8 @@ public class TenantApplyFragment extends Fragment {
             }
         });
         submit_button.setOnClickListener(view12 -> {
-            Application applicant = new Application(userID,fullName.toString(),address.toString(),company);
+            Application applicant = new Application(userID,fullName.getText().toString(),
+                    address.getText().toString(),company);
             Task<DocumentReference> applyTask = db.collection("application").add(applicant);
 
         });

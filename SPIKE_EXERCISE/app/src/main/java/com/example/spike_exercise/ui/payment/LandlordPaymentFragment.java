@@ -58,8 +58,7 @@ public class LandlordPaymentFragment extends Fragment {
     ) {
         binding = FragmentLandlordPaymentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        db = FirebaseFirestore.getInstance();
+        addAmount = 0;db = FirebaseFirestore.getInstance();
         ArrayList<PaymentModel> list = new ArrayList<>();
         text = binding.textView7;
         Spinner spinner = binding.spinner3;

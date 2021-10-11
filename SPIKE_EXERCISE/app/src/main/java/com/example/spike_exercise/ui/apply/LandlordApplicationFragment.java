@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.spike_exercise.data.LoginRepository;
 import com.example.spike_exercise.databinding.FragmentLandlordApplicationBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -21,7 +22,8 @@ import java.util.Objects;
 
 public class LandlordApplicationFragment extends Fragment {
     FirebaseFirestore db;
-    String UserID = "";
+    String tenetId = "";
+    String landLordCompany;
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState
@@ -32,9 +34,12 @@ public class LandlordApplicationFragment extends Fragment {
 
         TextView applyName = binding.LandlordApplicationName;
         TextView addressName = binding.LandlordAddress;
-        Button submit = binding.AcceptApplication;
+        Button accept = binding.AcceptApplication;
         Button next = binding.NextApplicant;
         Button deny = binding.DenyButton;
+
+        landLordCompany = LoginRepository.getInstance().getCurrentUser().getUid();
+        
         db = FirebaseFirestore.getInstance();
         ArrayList<Application> list = new ArrayList<>();
         db.collection("application").get().addOnCompleteListener(task -> {
@@ -47,17 +52,23 @@ public class LandlordApplicationFragment extends Fragment {
                 System.out.println("Error");
             }
         });
-        if (list.isEmpty()) {
+        int applicantCount = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getCompany().equals(landLordCompany))
+                applicantCount++;
+        }
+        if (list.isEmpty() || applicantCount == 0) {
             addressName.setText("");
-            UserID = "";
+            tenetId = "";
             applyName.setText("No Applicants");
         }
-        submit.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
+        accept.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    String applicantID = (String)document.get("UserId");//Remove
-                    DocumentReference docref = db.collection("application").document(document.getId());
-                    docref.delete();
+                    DocumentReference userRef = db.collection("users").document(tenetId);
+                    userRef.update("landLordID",landLordCompany);
+                    DocumentReference docRef = db.collection("application").document(document.getId());
+                    docRef.delete();
                 }
             } else {
                 System.out.println("Error");
@@ -66,8 +77,8 @@ public class LandlordApplicationFragment extends Fragment {
         deny.setOnClickListener(view -> db.collection("application").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    DocumentReference docref = db.collection("application").document(document.getId());
-                    docref.delete();
+                    DocumentReference docRef = db.collection("application").document(document.getId());
+                    docRef.delete();
                 }
             } else {
                 System.out.println("Error");
@@ -76,12 +87,13 @@ public class LandlordApplicationFragment extends Fragment {
 
         for (int i = 0; i < list.size(); i++) {
             int finalI = i;
-            //if(list.get(finalI).getCompany()=);
-            next.setOnClickListener(view -> {
-                applyName.setText(list.get(finalI).getName());
-                UserID = list.get(finalI).getUserID();
-                addressName.setText(list.get(finalI).getApplyAddress());
-            });
+            if(list.get(finalI).getCompany().equals(landLordCompany)) {
+                next.setOnClickListener(view -> {
+                    applyName.setText(list.get(finalI).getName());
+                    tenetId = list.get(finalI).getUserID();
+                    addressName.setText(list.get(finalI).getApplyAddress());
+                });
+            }
             if (i == list.size() - 1) {
                 i = 0;
             }

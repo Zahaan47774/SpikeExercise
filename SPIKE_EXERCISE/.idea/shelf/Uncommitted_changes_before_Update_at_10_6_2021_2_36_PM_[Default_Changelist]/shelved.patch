@@ -1,0 +1,344 @@
+Index: app/src/main/java/com/example/spike_exercise/ui/maintenance/MaintenanceFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.spike_exercise.ui.maintenance;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.lifecycle.Observer;\r\nimport androidx.lifecycle.ViewModelProvider;\r\n\r\nimport com.example.spike_exercise.MainActivity;\r\nimport com.example.spike_exercise.R;\r\nimport com.example.spike_exercise.databinding.FragmentMaintenanceBinding;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.firestore.DocumentReference;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\n\r\npublic class MaintenanceFragment extends Fragment implements OnCompleteListener<DocumentReference> {\r\n\r\n    private MaintenanceViewModel      maintenanceViewModel;\r\n    private FragmentMaintenanceBinding binding;\r\n    EditText ed1,ed3;\r\n    FirebaseFirestore db;\r\n    FirebaseAuth auth;\r\n    String userID;\r\n    public View onCreateView(@NonNull LayoutInflater inflater,\r\n                             ViewGroup container, Bundle savedInstanceState\r\n    ) {\r\n        maintenanceViewModel =\r\n                new ViewModelProvider(this).get(MaintenanceViewModel.class);\r\n\r\n        binding = FragmentMaintenanceBinding.inflate(inflater, container, false);\r\n        View root = binding.getRoot();\r\n        Button button = binding.button;\r\n         ed1 = binding.editTextNumber2;\r\n         ed3 = binding.editTextTextPersonName2;\r\n        db = FirebaseFirestore.getInstance();\r\n        auth = FirebaseAuth.getInstance();\r\n         userID = auth.getUid();\r\n        button.setOnClickListener(view -> save(view));\r\n        return root;\r\n    }\r\n\r\n    @Override\r\n    public void onDestroyView() {\r\n        super.onDestroyView();\r\n        binding = null;\r\n    }\r\n    public void save(View v){\r\n        Request request = new Request(userID,ed1.getText().toString(),ed3.getText().toString());\r\n        Task<DocumentReference> signupTask = db.collection(\"maintananence\").add(request);\r\n        signupTask.addOnCompleteListener(MaintenanceFragment.this);\r\n    }\r\n\r\n    private void navigateToMaintananceActivity() {\r\n        Intent intent = new Intent(getContext(), MaintenanceFragment.class);\r\n        startActivity(intent);\r\n    }\r\n\r\n    @Override\r\n    public void onComplete(@NonNull Task<DocumentReference> task) {\r\n        //loginViewModel.setBusyStatus(false);\r\n        if(task.isSuccessful()) {\r\n            System.out.println(\"Success\");\r\n        } else {\r\n            String errorMessage = task.getException().getMessage().toLowerCase();\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/maintenance/MaintenanceFragment.java b/app/src/main/java/com/example/spike_exercise/ui/maintenance/MaintenanceFragment.java
+--- a/app/src/main/java/com/example/spike_exercise/ui/maintenance/MaintenanceFragment.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/app/src/main/java/com/example/spike_exercise/ui/maintenance/MaintenanceFragment.java	(date 1633541238309)
+@@ -35,8 +35,7 @@
+     FirebaseAuth auth;
+     String userID;
+     public View onCreateView(@NonNull LayoutInflater inflater,
+-                             ViewGroup container, Bundle savedInstanceState
+-    ) {
++                             ViewGroup container, Bundle savedInstanceState) {
+         maintenanceViewModel =
+                 new ViewModelProvider(this).get(MaintenanceViewModel.class);
+ 
+Index: app/src/main/java/com/example/spike_exercise/ui/maintenance/LandlordMaintenanceFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/maintenance/LandlordMaintenanceFragment.java b/app/src/main/java/com/example/spike_exercise/ui/maintenance/LandlordMaintenanceFragment.java
+new file mode 100644
+--- /dev/null	(date 1633548944779)
++++ b/app/src/main/java/com/example/spike_exercise/ui/maintenance/LandlordMaintenanceFragment.java	(date 1633548944779)
+@@ -0,0 +1,108 @@
++package com.example.spike_exercise.ui.maintenance;
++
++import android.content.Intent;
++import android.os.Bundle;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.Button;
++import android.widget.EditText;
++import android.widget.TextView;
++import android.widget.Toast;
++
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++import androidx.fragment.app.Fragment;
++import androidx.lifecycle.Observer;
++import androidx.lifecycle.ViewModelProvider;
++
++import com.example.spike_exercise.MainActivity;
++import com.example.spike_exercise.R;
++import com.example.spike_exercise.databinding.FragmentLandlordMaintenanceBinding;
++import com.example.spike_exercise.ui.login.LoginFragment;
++import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.Task;
++import com.google.firebase.auth.AuthResult;
++import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.firestore.CollectionReference;
++import com.google.firebase.firestore.DocumentReference;
++import com.google.firebase.firestore.FirebaseFirestore;
++import com.google.firebase.firestore.QuerySnapshot;
++
++
++public class LandlordMaintenanceFragment extends Fragment implements OnCompleteListener<DocumentReference> {
++
++    private LandlordMaintenanceViewModel LandlordMaintenanceViewModel;
++    private FragmentLandlordMaintenanceBinding binding;
++
++    // buttons and text fields
++    private TextView textview1, textView2;
++    private String userID;
++    private Button button1, button2;
++
++    // firebase stuff
++    FirebaseFirestore db;
++    FirebaseAuth auth;
++
++    public View onCreateView(@NonNull LayoutInflater inflater,
++                             ViewGroup container, Bundle savedInstanceState) {
++        LandlordMaintenanceViewModel =
++                new ViewModelProvider(this).get(LandlordMaintenanceViewModel.class);
++
++        binding = FragmentLandlordMaintenanceBinding.inflate(inflater, container, false);
++        View root = binding.getRoot();
++
++        button1 = binding.buttonDisplayRequest;
++        button2 = binding.buttonSendMessage;
++        textview1 = binding.textViewDisplayUser;
++        textView2 = binding.textViewRequest;
++
++        db = FirebaseFirestore.getInstance();
++        // retrieves collection of requests
++        Task<DocumentReference> signupTask = db.collection("maintananence").get(response);
++
++
++        // displays new request
++        button1.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                // need to retrieve data from database
++                // display user id within textview1
++                // display maintenance request within textview2
++            }
++        });
++
++        button2.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                // need to retrieve data from database
++                // display user id
++                // display maintenance request
++            }
++        });
++
++        return root;
++    }
++
++
++    @Override
++    public void onDestroyView() {
++        super.onDestroyView();
++        binding = null;
++    }
++
++    private void navigateToMaintenanceActivity() {
++        Intent intent = new Intent(getContext(), LandlordMaintenanceFragment.class);
++        startActivity(intent);
++    }
++
++    @Override
++    public void onComplete(@NonNull Task<DocumentReference> task) {
++        //loginViewModel.setBusyStatus(false);
++        if(task.isSuccessful()) {
++            System.out.println("Success");
++        } else {
++            String errorMessage = task.getException().getMessage().toLowerCase();
++        }
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/spike_exercise/ui/maintenance/Request.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.spike_exercise.ui.maintenance;\r\n\r\npublic class Request {\r\n    public String userID,tenantID;\r\n    public String request;\r\n    public Request(String userID,String tenantID,String request){\r\n        this.userID = userID;\r\n        this.tenantID = tenantID;\r\n        this.request = request;\r\n    }\r\n    public Request(){\r\n\r\n    }\r\n    public String getTenantID() {\r\n        return tenantID;\r\n    }\r\n\r\n    public String getRequest() {\r\n        return request;\r\n    }\r\n\r\n    public void setRequest(String request) {\r\n        this.request = request;\r\n    }\r\n\r\n    public void setTenantID(String tenantID) {\r\n        this.tenantID = tenantID;\r\n    }\r\n\r\n    public String getUserID() {\r\n        return userID;\r\n    }\r\n\r\n    public void setUserID(String userID) {\r\n        this.userID = userID;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/maintenance/Request.java b/app/src/main/java/com/example/spike_exercise/ui/maintenance/Request.java
+--- a/app/src/main/java/com/example/spike_exercise/ui/maintenance/Request.java	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/app/src/main/java/com/example/spike_exercise/ui/maintenance/Request.java	(date 1633533558478)
+@@ -1,20 +1,27 @@
+ package com.example.spike_exercise.ui.maintenance;
+ 
+ public class Request {
++
+     public String userID,tenantID;
+     public String request;
++    public String landlordResponse;
++
+     public Request(String userID,String tenantID,String request){
+         this.userID = userID;
+         this.tenantID = tenantID;
+         this.request = request;
++        this.landlordResponse = null;
+     }
+-    public Request(){
++    public Request(){ }
+ 
+-    }
+     public String getTenantID() {
+         return tenantID;
+     }
+ 
++    public void setTenantID(String tenantID) {
++        this.tenantID = tenantID;
++    }
++
+     public String getRequest() {
+         return request;
+     }
+@@ -23,10 +30,6 @@
+         this.request = request;
+     }
+ 
+-    public void setTenantID(String tenantID) {
+-        this.tenantID = tenantID;
+-    }
+-
+     public String getUserID() {
+         return userID;
+     }
+@@ -34,4 +37,8 @@
+     public void setUserID(String userID) {
+         this.userID = userID;
+     }
++
++    public String getLandlordResponse() { return landlordResponse; }
++
++    public void setLandlordResponse(String landlordResponse) { this.landlordResponse = landlordResponse; }
+ }
+Index: app/src/main/java/com/example/spike_exercise/ui/maintenance/LandlordMaintenanceViewModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/spike_exercise/ui/maintenance/LandlordMaintenanceViewModel.java b/app/src/main/java/com/example/spike_exercise/ui/maintenance/LandlordMaintenanceViewModel.java
+new file mode 100644
+--- /dev/null	(date 1633528645354)
++++ b/app/src/main/java/com/example/spike_exercise/ui/maintenance/LandlordMaintenanceViewModel.java	(date 1633528645354)
+@@ -0,0 +1,34 @@
++package com.example.spike_exercise.ui.maintenance;
++
++import android.util.Patterns;
++
++import androidx.lifecycle.LiveData;
++import androidx.lifecycle.MutableLiveData;
++import androidx.lifecycle.ViewModel;
++
++public class LandlordMaintenanceViewModel extends ViewModel {
++
++    private MutableLiveData<String> mText;
++
++    public LandlordMaintenanceViewModel() {
++        mText = new MutableLiveData<>();
++        mText.setValue("This is the maintenance requests fragment.");
++    }
++
++
++    public boolean validateRequiredField(String fieldText) {
++        return fieldText != null && !fieldText.isEmpty();
++    }
++
++    public boolean validateEmailField(String emailText) {
++        return emailText != null && Patterns.EMAIL_ADDRESS.matcher(emailText).matches();
++    }
++
++    public boolean validatePasswordField(String passwordText) {
++        return passwordText != null && !passwordText.isEmpty();
++    }
++
++    public LiveData<String> getText() {
++        return mText;
++    }
++}
+\ No newline at end of file
+Index: app/src/main/res/layout/landlord_maintenance_fragment.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/landlord_maintenance_fragment.xml b/app/src/main/res/layout/landlord_maintenance_fragment.xml
+new file mode 100644
+--- /dev/null	(date 1633537158647)
++++ b/app/src/main/res/layout/landlord_maintenance_fragment.xml	(date 1633537158647)
+@@ -0,0 +1,69 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:id="@+id/frameLayout"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context=".ui.maintenance.LandlordMaintenanceFragment">
++
++    <Button
++        android:id="@+id/buttonDisplayRequest"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="98dp"
++        android:layout_marginTop="48dp"
++        android:layout_marginEnd="98dp"
++        android:text="Display Next Request"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintHorizontal_bias="1.0"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent" />
++
++    <TextView
++        android:id="@+id/textViewRequest"
++        android:layout_width="212dp"
++        android:layout_height="266dp"
++        android:layout_marginTop="24dp"
++        android:layout_marginEnd="100dp"
++        android:text="Request details"
++        android:textAlignment="textStart"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/textViewDisplayUser" />
++
++    <EditText
++        android:id="@+id/editTextSendMessage"
++        android:layout_width="212dp"
++        android:layout_height="56dp"
++        android:layout_marginTop="80dp"
++        android:layout_marginEnd="100dp"
++        android:ems="10"
++        android:gravity="start|top"
++        android:hint="Send a Message Back"
++        android:inputType="textMultiLine"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/textViewRequest" />
++
++    <Button
++        android:id="@+id/buttonSendMessage"
++        android:layout_width="102dp"
++        android:layout_height="48dp"
++        android:layout_marginEnd="152dp"
++        android:layout_marginBottom="44dp"
++        android:text="Send"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/editTextSendMessage"
++        app:layout_constraintVertical_bias="1.0" />
++
++    <TextView
++        android:id="@+id/textViewDisplayUser"
++        android:layout_width="212dp"
++        android:layout_height="59dp"
++        android:layout_marginTop="36dp"
++        android:layout_marginEnd="100dp"
++        android:text="User ID"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/buttonDisplayRequest" />
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"DesignSurface\">\r\n    <option name=\"filePathToZoomLevelMap\">\r\n      <map>\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_account.xml\" value=\"0.334375\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_login.xml\" value=\"0.2515625\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/activity_main.xml\" value=\"0.371875\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_login.xml\" value=\"0.334375\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_signup.xml\" value=\"0.4395833333333333\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/signup_fragment.xml\" value=\"0.33\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/menu/bottom_nav_menu.xml\" value=\"0.334375\" />\r\n        <entry key=\"..\\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/mipmap-anydpi-v26/madison_image.xml\" value=\"0.225\" />\r\n        <entry key=\"app/src/main/res/layout/activity_account.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/activity_main.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_apply.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_login.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_maintenance.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_payment.xml\" value=\"0.19519927536231885\" />\r\n        <entry key=\"app/src/main/res/layout/fragment_signup.xml\" value=\"0.19519927536231885\" />\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" default=\"true\" project-jdk-name=\"11\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 245bc181440d7953a1618f3231476400009ea912)
++++ b/.idea/misc.xml	(date 1633529421396)
+@@ -11,6 +11,9 @@
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/signup_fragment.xml" value="0.33" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/menu/bottom_nav_menu.xml" value="0.334375" />
+         <entry key="..\:/Users/masonberres/AndroidStudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/mipmap-anydpi-v26/madison_image.xml" value="0.225" />
++        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_login.xml" value="0.25" />
++        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/fragment_maintenance.xml" value="0.2" />
++        <entry key="..\:/Users/raeaf/StudioProjects/SpikeExercise/SPIKE_EXERCISE/app/src/main/res/layout/landlord_maintenance_fragment.xml" value="0.268" />
+         <entry key="app/src/main/res/layout/activity_account.xml" value="0.19519927536231885" />
+         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19519927536231885" />
+         <entry key="app/src/main/res/layout/fragment_apply.xml" value="0.19519927536231885" />
